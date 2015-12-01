@@ -1,0 +1,62 @@
+article p {
+    margin: 0 2rem;
+}
+
+figure {
+    text-align: center;
+}
+
+h4 {
+    border-bottom: 2px solid #ddd;
+    text-align: center;
+    color: #666;
+}
+
+.container {
+    max-width: 60rem;
+}
+
+.file-icon {
+    position: relative;
+    margin-right: 1rem;
+    color: #999;
+    top: 0.2em;
+}
+
+.comment {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    position: relative;
+    margin-top: 1rem;
+    background: #eee;
+}
+
+.comment > .avatar {
+    border: 2px solid #ddd;
+    border-radius: 3rem;
+    position: absolute;
+    background: white;
+    height: 3rem;
+    left: -2rem;
+    width: 3rem;
+    top: -2rem;
+}
+
+.comment:nth-child(2n) > .avatar {
+    left: auto;
+    right: -2rem;
+}
+
+.comment > .author {
+    position: absolute;
+    padding: 0px 1rem;
+    left: 0.5rem;
+    color: #666;
+    top: -2rem;
+}
+
+.comment:nth-child(2n) > .author {
+    right: 0.5rem;
+    left: auto;
+}
+
