@@ -2,8 +2,16 @@ article p {
     margin: 0 2rem;
 }
 
+article {
+    margin-bottom: 4rem;
+}
+
 figure {
     text-align: center;
+}
+
+figure img {
+    image-orientation: from-image;
 }
 
 h4 {
@@ -24,11 +32,9 @@ h4 {
 }
 
 .comment {
-    border: 2px solid #ddd;
-    border-radius: 5px;
+    border-left: 2px solid #ddd;
     position: relative;
     margin-top: 1rem;
-    background: #eee;
 }
 
 .comment > .avatar {
@@ -36,20 +42,25 @@ h4 {
     border-radius: 3rem;
     position: absolute;
     background: white;
+    left: -1.75rem;
     height: 3rem;
-    left: -2rem;
     width: 3rem;
     top: -2rem;
 }
 
+.comment:nth-child(2n) {
+    border-right: 2px solid #ddd;
+    border-left: none;
+}
+
 .comment:nth-child(2n) > .avatar {
     left: auto;
-    right: -2rem;
+    right: -1.75rem;
 }
 
 .comment > .author {
     position: absolute;
-    padding: 0px 1rem;
+    padding: 0 1.5rem;
     left: 0.5rem;
     color: #666;
     top: -2rem;
