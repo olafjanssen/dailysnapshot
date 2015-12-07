@@ -10,6 +10,8 @@ require_once('lib/dailysnapshot.php');
 <html>
 <head>
     <title>Daily Snapshot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/dailysnapshot.css">
@@ -25,6 +27,12 @@ require_once('lib/dailysnapshot.php');
 
         // create a list of date-sorted attachments and comments
         var articles = [].concat(submission.submission_comments).concat(submission.submission_history);
+
+        // filter out submissions that are not comments or attached files (should not occur in practice)
+        articles = articles.filter(function(article) {
+            return article.comment || article.attachments;
+        });
+
         articles.sort(function (a, b) {
             // sort by submission date and let attachments go before comments (new to old)
             var aa = a.submitted_at ? new Date(a.submitted_at) : new Date(new Date(a.created_at).valueOf() - 20000),
@@ -35,6 +43,7 @@ require_once('lib/dailysnapshot.php');
         var dateString = '';
         articles.forEach(function (attempt) {
 
+            console.log(attempt);
             var date = attempt.submitted_at ? attempt.submitted_at : attempt.created_at;
             var newDateString = moment(date).format('dddd, MMMM Do');
             if (newDateString !== dateString) {
