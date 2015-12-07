@@ -38,7 +38,7 @@ require_once('lib/dailysnapshot.php');
             // sort by submission date and let attachments go before comments (new to old)
             var aa = a.submitted_at ? new Date(a.submitted_at) : new Date(new Date(a.created_at).valueOf() - 20000),
                 bb = b.submitted_at ? new Date(b.submitted_at) : new Date(new Date(b.created_at).valueOf() - 20000);
-            return aa < bb;
+            return bb - aa;
         });
 
         var dateString = '';
