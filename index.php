@@ -19,6 +19,7 @@ require_once('lib/dailysnapshot.php');
 </head>
 <body>
 <script>
+
     var submissions = <?php echo json_encode($submissions); ?>;
 
     submissions.forEach(function (submission) {
@@ -29,7 +30,7 @@ require_once('lib/dailysnapshot.php');
         var articles = [].concat(submission.submission_comments).concat(submission.submission_history);
 
         // filter out submissions that are not comments or attached files (should not occur in practice)
-        articles = articles.filter(function(article) {
+        articles = articles.filter(function (article) {
             return article.comment || article.attachments;
         });
 
@@ -61,16 +62,22 @@ require_once('lib/dailysnapshot.php');
             article.classList.add('row');
 
             if (attempt.attachments) {
-                var figure = document.createElement('figure');
+                var figure = document.createElement('figure'),
+                    img;
                 attempt.attachments.forEach(function (attachment) {
                     var contentType = attachment['content-type'];
                     console.log(contentType);
                     switch (contentType) {
                         case 'image/png':
+                            img = document.createElement('img');
+                            img.src = attachment.url;
+                            img.classList.add('u-full-width');
+                            figure.appendChild(img);
+                            break;
                         case 'image/jpeg':
                         case 'image/jpg':
-                            var img = document.createElement('img');
-                            img.src = attachment.url;
+                            img = document.createElement('img');
+                            img.src = 'jpegProxy.php?path=' + encodeURIComponent(attachment.url);
                             img.classList.add('u-full-width');
                             figure.appendChild(img);
                             break;
