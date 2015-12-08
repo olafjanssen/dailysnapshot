@@ -18,16 +18,46 @@ require_once('lib/dailysnapshot.php');
     <script src="js/moment.min.js"></script>
 </head>
 <body>
+<select id="student-filter">
+    <option>Show all</option>
+</select>
+<section id="student-blog"></section>
 <script>
 
     var submissions = <?php echo json_encode($submissions); ?>;
+    var selectElement = document.getElementById('student-filter');
 
+    var students = [];
     submissions.forEach(function (submission) {
-        var section = document.createElement('section');
-        section.classList.add('container');
+        students.push(submission.user);
+        var option = document.createElement('option');
+        option.innerHTML = submission.user['sortable_name'];
+        document.getElementById('student-filter').appendChild(option);
+    });
 
-        // create a list of date-sorted attachments and comments
-        var articles = [].concat(submission.submission_comments).concat(submission.submission_history);
+    selectElement.addEventListener('change', function (e) {
+        var selectedIndex = selectElement.selectedIndex;
+        showSubmissionIndex(selectedIndex);
+    });
+
+    showSubmissionIndex(0);
+
+    function showSubmissionIndex(selectedIndex){
+        var articles = [];
+        if (selectedIndex == 0) {
+            submissions.forEach(function(submission){
+                articles = articles.concat(submission.submission_comments).concat(submission.submission_history);
+            });
+        } else {
+            articles = articles.concat(submissions[selectedIndex - 1].submission_comments).concat(submissions[selectedIndex - 1].submission_history);
+        }
+        showData(articles);
+    }
+
+    function showData(articles) {
+        var section = document.getElementById('student-blog');
+        section.innerHTML = '';
+        section.classList.add('container');
 
         // filter out submissions that are not comments or attached files (should not occur in practice)
         articles = articles.filter(function (article) {
@@ -44,7 +74,6 @@ require_once('lib/dailysnapshot.php');
         var dateString = '';
         articles.forEach(function (attempt) {
 
-            console.log(attempt);
             var date = attempt.submitted_at ? attempt.submitted_at : attempt.created_at;
             var newDateString = moment(date).format('dddd, MMMM Do');
             if (newDateString !== dateString) {
@@ -66,7 +95,6 @@ require_once('lib/dailysnapshot.php');
                     img;
                 attempt.attachments.forEach(function (attachment) {
                     var contentType = attachment['content-type'];
-                    console.log(contentType);
                     switch (contentType) {
                         case 'image/png':
                             img = document.createElement('img');
@@ -131,7 +159,8 @@ require_once('lib/dailysnapshot.php');
         });
 
         document.body.appendChild(section);
-    });
+    }
+
 </script>
 
 

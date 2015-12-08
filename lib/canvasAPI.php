@@ -223,7 +223,7 @@
 
         // List Submissions for a given assignment
         function listAssignmentsSubmissionHistory($courseID, $assignmentID, $studentID){
-            $response = curlGet("courses/".$courseID."/students/submissions?per_page=50&include[]=submission_history&include[]=submission_comments&assignment_ids[]=".$assignmentID."&student_ids[]=".$studentID);
+            $response = curlGet("courses/".$courseID."/students/submissions?per_page=50&include[]=user&include[]=submission_history&include[]=submission_comments&assignment_ids[]=".$assignmentID."&student_ids[]=".$studentID);
             return $response;
         }
         
