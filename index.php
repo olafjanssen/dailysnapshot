@@ -14,7 +14,6 @@ require_once('lib/dailysnapshot.php');
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <!--    <link rel="stylesheet" href="css/skeleton.css">-->
   <link rel="stylesheet" href="css/dailysnapshot.css">
   <script src="js/moment.min.js"></script>
 </head>
@@ -138,6 +137,7 @@ require_once('lib/dailysnapshot.php');
               var anchor = document.createElement('a');
               anchor.innerHTML = attachment.filename;
               anchor.href = attachment.url;
+              article.classList.add('file');
               article.appendChild(anchor);
               break;
           }
