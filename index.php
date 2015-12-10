@@ -12,15 +12,30 @@ require_once('lib/dailysnapshot.php');
     <title>Daily Snapshot</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/paper-card/paper-card.html">
+    <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/dailysnapshot.css">
+<!--    <link rel="stylesheet" href="css/skeleton.css">-->
+<!--    <link rel="stylesheet" href="css/dailysnapshot.css">-->
     <script src="js/moment.min.js"></script>
 </head>
 <body>
-<select id="student-filter">
-    <option>Show all</option>
-</select>
+
+<paper-dropdown-menu label="Student">
+    <paper-menu class="dropdown-content" selected="0" id="student-filter">
+        <paper-item>Show all</paper-item>
+    </paper-menu>
+</paper-dropdown-menu>
+
+<!--<select id="student-filter">-->
+<!--    <option>Show all</option>-->
+<!--</select>-->
 <section id="student-blog"></section>
 <script>
 
@@ -30,22 +45,24 @@ require_once('lib/dailysnapshot.php');
     var students = [];
     submissions.forEach(function (submission) {
         students.push(submission.user);
-        var option = document.createElement('option');
+        var option = document.createElement('paper-item');
         option.innerHTML = submission.user['sortable_name'];
-        document.getElementById('student-filter').appendChild(option);
+        selectElement.appendChild(option);
     });
 
+    // todo
     selectElement.addEventListener('change', function (e) {
+        console.log('hello!');
         var selectedIndex = selectElement.selectedIndex;
         showSubmissionIndex(selectedIndex);
     });
 
     showSubmissionIndex(0);
 
-    function showSubmissionIndex(selectedIndex){
+    function showSubmissionIndex(selectedIndex) {
         var articles = [];
         if (selectedIndex == 0) {
-            submissions.forEach(function(submission){
+            submissions.forEach(function (submission) {
                 articles = articles.concat(submission.submission_comments).concat(submission.submission_history);
             });
         } else {
@@ -78,36 +95,30 @@ require_once('lib/dailysnapshot.php');
             var newDateString = moment(date).format('dddd, MMMM Do');
             if (newDateString !== dateString) {
                 dateString = newDateString;
-                var header = document.createElement('h4');
-                var dateHeader = document.createElement('time');
-                dateHeader.setAttribute('datetime', date);
-                dateHeader.innerHTML = dateString;
-                header.appendChild(dateHeader);
-                section.appendChild(header);
+
+                var card = document.createElement('paper-card');
+                card.setAttribute('heading', dateString);
+                section.appendChild(card);
             }
 
 
-            var article = document.createElement('article');
-            article.classList.add('row');
+            var card = document.createElement('paper-card'),
+                cardContent = document.createElement('div');
+
+            cardContent.classList.add('card-content');
+            card.setAttribute('preloadimage', 'true');
+            card.appendChild(cardContent);
 
             if (attempt.attachments) {
-                var figure = document.createElement('figure'),
-                    img;
                 attempt.attachments.forEach(function (attachment) {
                     var contentType = attachment['content-type'];
                     switch (contentType) {
                         case 'image/png':
-                            img = document.createElement('img');
-                            img.src = attachment.url;
-                            img.classList.add('u-full-width');
-                            figure.appendChild(img);
+                            card.setAttribute('image', attachment.url);
                             break;
                         case 'image/jpeg':
                         case 'image/jpg':
-                            img = document.createElement('img');
-                            img.src = 'jpegProxy.php?path=' + encodeURIComponent(attachment.url);
-                            img.classList.add('u-full-width');
-                            figure.appendChild(img);
+                            card.setAttribute('image', 'jpegProxy.php?path=' + encodeURIComponent(attachment.url));
                             break;
                         default:
                             var icon = document.createElement('i');
@@ -127,34 +138,35 @@ require_once('lib/dailysnapshot.php');
                                     icon.classList.add('fa-file-image-o');
                                     break;
                             }
-                            figure.appendChild(icon);
+                            cardContent.appendChild(icon);
 
                             var anchor = document.createElement('a');
                             anchor.innerHTML = attachment.filename;
                             anchor.href = attachment.url;
-                            figure.appendChild(anchor);
+
+                            cardContent.appendChild(anchor);
                             break;
                     }
                 });
-                article.appendChild(figure);
             }
             if (attempt.comment) {
-                var avatar = document.createElement('img');
-                avatar.src = attempt.author.avatar_image_url;
-                avatar.classList.add('avatar');
-                var author = document.createElement('em');
-                author.innerHTML = attempt.author.display_name;
-                author.classList.add('author');
+//                var avatar = document.createElement('img');
+//                avatar.src = attempt.author.avatar_image_url;
+//                avatar.classList.add('avatar');
+//                var author = document.createElement('em');
+//                author.innerHTML = attempt.author.display_name;
+//                author.classList.add('author');
+
                 var paragraph = document.createElement('p');
                 paragraph.innerHTML = attempt.comment;
 
-                article.classList.add('comment');
-                article.appendChild(avatar);
-                article.appendChild(author);
-                article.appendChild(paragraph);
+//                article.classList.add('comment');
+//                article.appendChild(avatar);
+//                article.appendChild(author);
+                cardContent.appendChild(paragraph);
             }
 
-            section.appendChild(article);
+            section.appendChild(card);
 
         });
 
