@@ -1,0 +1,23 @@
+{
+  "name": "Daily Snapshot LTI",
+  "homepage": "https://github.com/olafjanssen/dailysnapshot",
+  "authors": [
+    "Olaf Janssen <o.t.a.janssen@gmail.com>"
+  ],
+  "description": "Canvas LTI for viewing a recurring assignment as a kind of blog",
+  "main": "index.php",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize-css": "normalize.css#~3.0.3"
+  },
+  "devDependencies": {}
+}
