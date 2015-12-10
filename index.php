@@ -1,15 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <title>Daily Snapshot</title>
-
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
-  <link rel="stylesheet" href="http://css-spinners.com/css/spinner/pong.css" type="text/css">
+  <link rel="stylesheet" href="css/pong.css">
 
-  <script src="js/moment.min.js"></script>
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/moment.min.js"></script>
 </head>
 <body>
 <header>

@@ -1,5 +1,8 @@
-<?
+<?php
 // PHP Proxy for jpeg images inclusing EXIF orientation correction
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $path = $_GET['path'];
 
@@ -8,6 +11,11 @@ $session = curl_init($path);
 curl_setopt($session, CURLOPT_HEADER, false);
 curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($session, CURLOPT_FOLLOWLOCATION, true);
+
+// TODO find a SSL worthy solution
+curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 0);
+curl_setopt($session, CURLOPT_SSL_VERIFYPEER, 0);
+
 
 $data = curl_exec($session);
 
@@ -24,3 +32,5 @@ imagejpeg($image);
 // clean-up
 imagedestroy($image);
 curl_close($session);
+
+

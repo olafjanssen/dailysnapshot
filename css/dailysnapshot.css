@@ -113,7 +113,7 @@ h4 {
   display: none;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 640px) {
   body {
     background: white;
   }
@@ -178,7 +178,8 @@ h4 {
 /*}*/
 
 .blog-image {
-  width: 100%;
-  min-height: 10em;
   background-color: #ddd;
+  min-height: 10em;
+  display: block;
+  width: 100%;
 }
