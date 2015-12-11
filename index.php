@@ -30,6 +30,7 @@
   </div>
 </section>
 <script>
+  var canvasDomain = 'https://fhict.instructure.com';
 
   $(function () {
     $.getJSON("submissions.php", function (resp) {
@@ -95,13 +96,14 @@
           }
 
           if (attempt.attachments) {
-            var img;
+            var img, audio, video, mediaSource, iframe;
             attempt.attachments.forEach(function (attachment) {
               var article = document.createElement('article');
               article.classList.add('row');
-
               var contentType = attachment['content-type'];
+              console.log(attachment);
               switch (contentType) {
+                case 'image/gif':
                 case 'image/png':
                   img = document.createElement('img');
                   img.src = attachment.url;
@@ -115,16 +117,65 @@
                   img.classList.add('blog-image');
                   article.appendChild(img);
                   break;
+                case 'audio/aac':
+                case 'audio/mp4':
+                case 'audio/mpeg':
+                case 'audio/ogg':
+                case 'audio/wav':
+                case 'audio/webm':
+                  audio = document.createElement('audio');
+                  audio.setAttribute('controls', 'true');
+                  audio.src = attachment.url;
+                  audio.classList.add('blog-image');
+                  mediaSource = document.createElement('source');
+                  mediaSource.setAttribute('src', attachment.url);
+                  mediaSource.setAttribute('type', contentType);
+                  audio.appendChild(mediaSource);
+                  article.appendChild(audio);
+                  break;
+                case 'video/quicktime':
+                case 'video/mp4':
+                case 'video/ogg':
+                case 'video/webm':
+                  video = document.createElement('video');
+                  video.setAttribute('controls', 'true');
+                  video.src = attachment.url;
+                  video.classList.add('blog-image');
+                  mediaSource = document.createElement('source');
+                  mediaSource.setAttribute('src', attachment.url);
+                  mediaSource.setAttribute('type', contentType);
+                  video.appendChild(mediaSource);
+                  article.appendChild(video);
+                  break;
+                case 'application/pdf':
+                case 'application/msword':
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                case 'application/vnd.ms-powerpoint':
+                case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                case 'application/vnd.ms-excel':
+                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                case 'text/plain':
+                case 'application/x-python':
+                case 'text/x-python':
+                case 'text/javascript':
+                case 'application/x-javascript':
+                case 'text/xml':
+                case 'application/xml':
+                case 'text/css':
+                case 'text/x-markdown':
+                case 'text/x-script.perl':
+                case 'text/x-c':
+                case 'text/x-m':
+                case 'application/json':
+                  iframe = document.createElement('iframe');
+                  iframe.setAttribute('src', canvasDomain + attachment.preview_url);
+                  iframe.classList.add('blog-embed');
+                  article.appendChild(iframe);
+                  break;
                 default:
                   var icon = document.createElement('i');
                   icon.setAttribute('class', 'fa fa-2x file-icon');
                   switch (contentType) {
-                    case 'application/pdf':
-                      icon.classList.add('fa-file-pdf-o');
-                      break;
-                    case 'application/msword':
-                      icon.classList.add('fa-file-word-o');
-                      break;
                     case 'application/zip':
                     case 'application/x-rar-compressed':
                       icon.classList.add('fa-file-zip-o');
