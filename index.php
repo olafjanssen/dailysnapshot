@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/pong.css">
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
 </head>
 <body>
@@ -101,7 +102,6 @@
               var article = document.createElement('article');
               article.classList.add('row');
               var contentType = attachment['content-type'];
-              console.log(attachment);
               switch (contentType) {
                 case 'image/gif':
                 case 'image/png':
@@ -207,7 +207,7 @@
             author.innerHTML = attempt.author.display_name;
             author.classList.add('author');
             var paragraph = document.createElement('p');
-            paragraph.innerHTML = attempt.comment;
+            paragraph.innerHTML = anchorme.js(attempt.comment); // replaces links!
 
             article.classList.add('comment');
             article.appendChild(avatar);
