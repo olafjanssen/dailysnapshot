@@ -2,7 +2,7 @@
 require_once('config.php');
 
 // This is the header containing the authorization token from Canvas
-$tokenHeader = array("Authorization: Bearer " . Config::accessToken());
+$tokenHeader = array("Authorization: Bearer " . State::accessToken());
 
 // the following functions run the GET and POST calls
 if (!function_exists('http_parse_headers')) {

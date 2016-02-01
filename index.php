@@ -1,18 +1,20 @@
 <?php
 // do Oauth2 check
 require_once('lib/config.php');
+require_once('lib/state.php');
 
-$oauthState = 'state';
-$uri = 'https://' . Config::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . $oauthState;
+State::verify();
 
-header('X-Frame-Options: GOFORIT');
-header("Location: " . $uri);
+if (!State::accessToken()) {
+  $uri = 'https://' . State::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . State::oauthState();
+  header('Location: ' . $uri);
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Daily Snapshot</title>
+  <title>Digital Dummy</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
@@ -42,7 +44,7 @@ header("Location: " . $uri);
   </div>
 </section>
 <script>
-  var canvasDomain = 'https://fhict.instructure.com';
+  var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
 
   $(function () {
     $.getJSON("submissions.php", function (resp) {

@@ -9,8 +9,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require_once 'lib/state.php';
+State::verify();
+
 require_once 'lib/canvasAPI.php';
-require_once('lib/dailysnapshot.php');
 
 header('Content-type: application/json');
+
+$submissions = listAssignmentsSubmissionHistory(State::courseId(), State::assignmentId(), 'all');
+
 echo json_encode($submissions);

@@ -6,9 +6,12 @@
  * Time: 14:58
  */
 require_once('lib/config.php');
+require_once('lib/state.php');
 
-if (!$_GET['error'] && $_GET['code']) {
-  // exchange for token
+State::verify();
+
+// exchange code for token
+if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) {
 
   $code = $_GET['code'];
   $uri = urlencode(Config::oauthCallbackURI());
@@ -20,7 +23,7 @@ if (!$_GET['error'] && $_GET['code']) {
     'grant_type' => 'authorization_code');
 
   var_dump($data);
-  $ch = curl_init('https://' . Config::canvasDomain() . '/login/oauth2/token');
+  $ch = curl_init('https://' . State::canvasDomain() . '/login/oauth2/token');
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -29,7 +32,10 @@ if (!$_GET['error'] && $_GET['code']) {
   $result = json_decode($result, true);
   $token = $result['access_token'];
 
-  var_dump($result);
+  State::setAccessToken($result['access_token']);
+  State::setRefreshToken($result['refresh_token']);
+
+  header('Location: index.php');
 }
 ?>
 

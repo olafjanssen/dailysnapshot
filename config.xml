@@ -8,13 +8,13 @@
     http://www.imsglobal.org/xsd/imsbasiclti_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imsbasiclti_v1p0.xsd
     http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd
     http://www.imsglobal.org/xsd/imslticp_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticp_v1p0.xsd">
-    <blti:launch_url>https://i876011.iris.fhict.nl/digitaldummy</blti:launch_url>
+    <blti:launch_url>https://i876011.iris.fhict.nl/digitaldummy/index.php</blti:launch_url>
     <blti:title>Digital Dummy</blti:title>
     <blti:description>Provides an overview of daily updates.</blti:description>
     <blti:extensions platform="canvas.instructure.com">
       <lticm:property name="privacy_level">public</lticm:property>
       <lticm:options name="course_navigation">
-        <lticm:property name="url">https://i876011.iris.fhict.nl/digitaldummy</lticm:property>
+        <lticm:property name="url">https://i876011.iris.fhict.nl/digitaldummy/index.php</lticm:property>
         <lticm:property name="enabled">true</lticm:property>
       </lticm:options>
     </blti:extensions>
