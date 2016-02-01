@@ -217,6 +217,11 @@ function getAssignment($courseID, $assignmentID) {
   return $response;
 }
 
+function searchAssignment($courseID, $search) {
+  $response = curlGet("courses/" . $courseID . "/assignments?search_term=" . $search);
+  return $response;
+}
+
 function updateAssignmentDates($courseID, $assignmentID, $dueDate, $unlockDate, $lockDate) {
   $apiURL = "courses/" . $courseID . "/assignments/" . $assignmentID;
   $assignmentParams = "assignment[due_at]=" . $dueDate . "&assignment[lock_at]=" . $lockDate . "&assignment[unlock_at]=" . $unlockDate;

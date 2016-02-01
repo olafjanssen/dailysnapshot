@@ -6,8 +6,25 @@ require_once('lib/state.php');
 State::verify();
 
 if (!State::accessToken()) {
+  // log in
   $uri = 'https://' . State::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . State::oauthState();
   header('Location: ' . $uri);
+} else {
+  // refresh the access token
+  $data = array('client_id' => Config::clientId(),
+    'redirect_uri' => urlencode($uri),
+    'client_secret' => rawurlencode(Config::clientSecret()),
+    'refresh_token' => State::refreshToken(),
+    'grant_type' => 'refresh_token');
+
+  $ch = curl_init('https://' . State::canvasDomain() . '/login/oauth2/token');
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($ch);
+  curl_close($ch);
+  $result = json_decode($result, true);
+  State::setAccessToken($result['access_token']);
 }
 ?>
 
@@ -28,7 +45,7 @@ if (!State::accessToken()) {
 </head>
 <body>
 <header>
-  <h1>Daily Snapshot</h1>
+  <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
   <div id="select-wrapper">
@@ -49,6 +66,7 @@ if (!State::accessToken()) {
   $(function () {
     $.getJSON("submissions.php", function (resp) {
       var submissions = resp;
+
       var selectElement = document.getElementById('student-filter');
 
       var students = [];

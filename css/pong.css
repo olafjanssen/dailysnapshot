@@ -19,7 +19,7 @@
   }
   100% {
     left: 5px;
-    top: 0%;
+    top: 0;
   }
 }
 @-webkit-keyframes pong-loader {
@@ -43,7 +43,7 @@
   }
   100% {
     left: 5px;
-    top: 0%;
+    top: 0;
   }
 }
 @keyframes pong-loader {
@@ -67,7 +67,7 @@
   }
   100% {
     left: 5px;
-    top: 0%;
+    top: 0;
   }
 }
 @-moz-keyframes pong-loader-paddle-1 {

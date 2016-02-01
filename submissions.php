@@ -16,6 +16,14 @@ require_once 'lib/canvasAPI.php';
 
 header('Content-type: application/json');
 
-$submissions = listAssignmentsSubmissionHistory(State::courseId(), State::assignmentId(), 'all');
+// find the correct assignment
+if (!State::assignmentId()) {
+  $daily = searchAssignment(State::courseId(), 'Daily');
 
+  if (count($daily)>0) {
+    State::setAssignmentId($daily[0]->id);
+  }
+}
+
+$submissions = listAssignmentsSubmissionHistory(State::courseId(), State::assignmentId(), 'all');
 echo json_encode($submissions);
