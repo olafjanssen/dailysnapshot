@@ -1,0 +1,70 @@
+<?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: olafjanssen
+ * Date: 21/01/16
+ * Time: 14:58
+ */
+require_once('lib/config.php');
+
+if (!$_GET['error'] && $_GET['code']) {
+  // exchange for token
+
+  $code = $_GET['code'];
+  $uri = urlencode(Config::oauthCallbackURI());
+
+  $data = array('client_id' => Config::clientId(),
+    'redirect_uri' => urlencode($uri),
+    'client_secret' => rawurlencode(Config::clientSecret()),
+    'code' => $code,
+    'grant_type' => 'authorization_code');
+
+  var_dump($data);
+  $ch = curl_init('https://' . Config::canvasDomain() . '/login/oauth2/token');
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($ch);
+  curl_close($ch);
+  $result = json_decode($result, true);
+  $token = $result['access_token'];
+
+  var_dump($result);
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Digital Dummy - authorization</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/dailysnapshot.css">
+  <link rel="stylesheet" href="css/pong.css">
+
+  <script src="js/moment.min.js"></script>
+</head>
+<body>
+<header>
+  <h1>Digital Dummy</h1>
+  <h2>You've moved mountains today!</h2>
+
+  <div id="select-wrapper">
+    <select id="student-filter">
+      <option>Show all</option>
+    </select>
+  </div>
+</header>
+
+<section id="student-blog" class="container">
+  <div class="pong-loader">
+
+  </div>
+</section>
+
+</body>
+</html>
+

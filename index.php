@@ -1,3 +1,14 @@
+<?php
+// do Oauth2 check
+require_once('lib/config.php');
+
+$oauthState = 'state';
+$uri = 'https://' . Config::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . $oauthState;
+
+header('X-Frame-Options: GOFORIT');
+header("Location: " . $uri);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
