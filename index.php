@@ -3,9 +3,12 @@
 require_once('lib/config.php');
 require_once('lib/state.php');
 
+State::fromInitialPost();
 
-if ($_REQUEST['request_method'] === 'POST') {
-  State::fromInitialPost();
+if (!State::courseId() || !State::canvasDomain()) {
+  header('HTTP/1.1 403 Forbidden');
+  echo 'Connect to this LTI using your Canvas course.';
+  exit();
 }
 
 if (!State::accessToken()) {
@@ -29,6 +32,8 @@ if (!State::accessToken()) {
   $result = json_decode($result, true);
   State::setAccessToken($result['access_token']);
 }
+
+var_dump(State::createUploadLink());
 ?>
 
 <!DOCTYPE html>

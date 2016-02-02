@@ -37,10 +37,10 @@ if (!function_exists('http_parse_headers')) {
 function curlGet($url) {
   global $tokenHeader;
   $ch = curl_init($url);
-  if (strpos($url, Config::canvasDomain()) !== false) {
+  if (strpos($url, State::canvasDomain()) !== false) {
     curl_setopt($ch, CURLOPT_URL, $url);
   } else {
-    curl_setopt($ch, CURLOPT_URL, 'https://' . Config::canvasDomain() . '/api/v1/' . $url);
+    curl_setopt($ch, CURLOPT_URL, 'https://' . State::canvasDomain() . '/api/v1/' . $url);
   }
   curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // ask for results to be returned
@@ -71,7 +71,7 @@ function curlGet($url) {
   #Check for Pagination
   if (isset($links['next'])) {
     // Remove the API url so it is not added again in the get call
-    $next_link = str_replace('https://' . Config::canvasDomain() . '/api/v1/', '', $links['next']);
+    $next_link = str_replace('https://' . State::canvasDomain() . '/api/v1/', '', $links['next']);
     $next_data = curlGet($next_link);
     $data = array_merge($data, $next_data);
     return $data;
@@ -83,7 +83,7 @@ function curlGet($url) {
 function curlPost($url, $data) {
   global $tokenHeader;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://' . Config::canvasDomain() . '/api/v1/' . $url);
+  curl_setopt($ch, CURLOPT_URL, 'https://' . State::canvasDomain() . '/api/v1/' . $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);
   curl_setopt($ch, CURLOPT_POST, true);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -98,7 +98,7 @@ function curlPost($url, $data) {
 function curlPut($url, $data) {
   global $tokenHeader;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://' . Config::canvasDomain() . '/api/v1/' . $url);
+  curl_setopt($ch, CURLOPT_URL, 'https://' . State::canvasDomain() . '/api/v1/' . $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -113,7 +113,7 @@ function curlPut($url, $data) {
 function curlDelete($url, $header) {
   global $tokenHeader;
   $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://' . Config::canvasDomain() . '/api/v1/' . $url);
+  curl_setopt($ch, CURLOPT_URL, 'https://' . State::canvasDomain() . '/api/v1/' . $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
   // $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);

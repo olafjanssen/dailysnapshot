@@ -1,24 +1,29 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: olafjanssen
- * Date: 21/01/16
- * Time: 14:58
- */
+// do Oauth2 check
 require_once('lib/config.php');
 require_once('lib/state.php');
 
-// exchange code for token
-if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) {
+State::fromInitialQuery();
 
-  $code = $_GET['code'];
-  $uri = urlencode(Config::oauthCallbackURI());
+var_dump($_SERVER);
 
+if (!State::courseId() || !State::canvasDomain()) {
+  header('HTTP/1.1 403 Forbidden');
+  echo 'Connect to this LTI using your Canvas course.';
+  exit();
+}
+
+if (!State::accessToken()) {
+  // log in
+  $uri = 'https://' . State::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . State::oauthState();
+  header('Location: ' . $uri);
+} else {
+  // refresh the access token
   $data = array('client_id' => Config::clientId(),
     'redirect_uri' => urlencode($uri),
     'client_secret' => rawurlencode(Config::clientSecret()),
-    'code' => $code,
-    'grant_type' => 'authorization_code');
+    'refresh_token' => State::refreshToken(),
+    'grant_type' => 'refresh_token');
 
   $ch = curl_init('https://' . State::canvasDomain() . '/login/oauth2/token');
   curl_setopt($ch, CURLOPT_POST, true);
@@ -27,20 +32,13 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
   $result = curl_exec($ch);
   curl_close($ch);
   $result = json_decode($result, true);
-  $token = $result['access_token'];
-
   State::setAccessToken($result['access_token']);
-  State::setRefreshToken($result['refresh_token']);
-
-  header('Location: '. State::oauthStateUri());
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Digital Dummy - authorization</title>
+  <title>Digital Dummy</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
@@ -48,26 +46,13 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
   <link rel="stylesheet" href="css/dailysnapshot.css">
   <link rel="stylesheet" href="css/pong.css">
 
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
 </head>
 <body>
 <header>
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
-
-  <div id="select-wrapper">
-    <select id="student-filter">
-      <option>Show all</option>
-    </select>
-  </div>
-</header>
-
-<section id="student-blog" class="container">
-  <div class="pong-loader">
-
-  </div>
-</section>
-
+</header
 </body>
-</html>
-
