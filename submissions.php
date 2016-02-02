@@ -10,18 +10,23 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'lib/state.php';
-State::verify();
-
 require_once 'lib/canvasAPI.php';
 
 header('Content-type: application/json');
 
 // find the correct assignment
 if (!State::assignmentId()) {
-  $daily = searchAssignment(State::courseId(), 'Daily');
+  $daily = searchAssignment(State::courseId(), 'Digital Dummy');
 
-  if (count($daily)>0) {
+  if (count($daily) > 0) {
     State::setAssignmentId($daily[0]->id);
+  } else {
+    // create assignment
+    $data = 'assignment[name]=' . urlencode('Digital Dummy') . '&assignment[points_possible]=1&assignment[grading_type]=pass_fail'.
+      '&assignment[submission_types][]=online_upload&assignment[published]=true';
+
+    $assignmentId = createGenericAssignment(State::courseId(), $data);
+    State::setAssignmentId($assignmentId);
   }
 }
 

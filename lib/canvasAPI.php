@@ -218,7 +218,7 @@ function getAssignment($courseID, $assignmentID) {
 }
 
 function searchAssignment($courseID, $search) {
-  $response = curlGet("courses/" . $courseID . "/assignments?search_term=" . $search);
+  $response = curlGet("courses/" . $courseID . "/assignments?search_term=" . urlencode($search));
   return $response;
 }
 

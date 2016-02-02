@@ -8,8 +8,6 @@
 require_once('lib/config.php');
 require_once('lib/state.php');
 
-State::verify();
-
 // exchange code for token
 if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) {
 

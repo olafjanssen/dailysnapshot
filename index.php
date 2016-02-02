@@ -3,7 +3,10 @@
 require_once('lib/config.php');
 require_once('lib/state.php');
 
-State::verify();
+
+if ($_REQUEST['request_method'] === 'POST') {
+  State::fromInitialPost();
+}
 
 if (!State::accessToken()) {
   // log in
