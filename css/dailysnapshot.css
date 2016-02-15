@@ -22,6 +22,54 @@ header {
   color: #333;
 }
 
+#file-upload-wrapper {
+  background-color: lightgreen;
+  position: relative;
+  border-radius: 5em;
+  overflow: hidden;
+  margin: 3em auto;
+  height: 5em;
+  width: 5em;
+}
+
+#file-upload-wrapper:active {
+  background-color: darkgreen;
+}
+
+#file-upload-wrapper:active i {
+  color: lightgreen;
+}
+
+#file-upload-wrapper i {
+  color: darkgreen;
+  font-size: 3em;
+  margin: 0.37em;
+}
+
+#file-upload {
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  right: 0;
+  top: 0;
+}
+
+progress {
+  margin: 1em auto;
+  display: none;
+  width: 10em;
+}
+
+.uploading progress {
+  display: block;
+}
+
+
 h1 {
   font-size: 1.5em;
   margin: 0;
@@ -136,46 +184,6 @@ h4 {
     margin: 0;
   }
 }
-
-/*.comment {*/
-  /*border-left: 2px solid #ddd;*/
-  /*position: relative;*/
-  /*margin-top: 1rem;*/
-/*}*/
-
-/*.comment > .avatar {*/
-  /*border: 2px solid #ddd;*/
-  /*border-radius: 3rem;*/
-  /*position: absolute;*/
-  /*background: white;*/
-  /*left: -1.75rem;*/
-  /*height: 3rem;*/
-  /*width: 3rem;*/
-  /*top: -2rem;*/
-/*}*/
-
-/*.comment:nth-child(2n) {*/
-  /*border-right: 2px solid #ddd;*/
-  /*border-left: none;*/
-/*}*/
-
-/*.comment:nth-child(2n) > .avatar {*/
-  /*left: auto;*/
-  /*right: -1.75rem;*/
-/*}*/
-
-/*.comment > .author {*/
-  /*position: absolute;*/
-  /*padding: 0 1.5rem;*/
-  /*left: 0.5rem;*/
-  /*color: #666;*/
-  /*top: -2rem;*/
-/*}*/
-
-/*.comment:nth-child(2n) > .author {*/
-  /*right: 0.5rem;*/
-  /*left: auto;*/
-/*}*/
 
 .blog-image {
   background-color: #ddd;

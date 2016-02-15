@@ -222,6 +222,58 @@ function searchAssignment($courseID, $search) {
   return $response;
 }
 
+function submitAssignment($courseId, $assignmentId, $fileIds) {
+  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions";
+  $fileIdsParams = '&submission[file_ids][]=' . implode('&submission[file_ids][]=', $fileIds);
+  $assignmentParams = "submission[submission_type]=online_upload" . $fileIdsParams;
+  $response = curlPost($apiURL, $assignmentParams);
+  return $response;
+}
+
+
+function uploadSubmissionFile($courseId, $assignmentId, $fileName, $contentType, $size) {
+//  $apiURL = "courses/" . $courseId . "/files";
+  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/self/files";
+  $apiParams = "name=" . urlencode($fileName) . "&content_type=" . urlencode($contentType) . "&size=" . $size . "&on_duplicate=rename";
+
+  $response = curlPost($apiURL, $apiParams);
+  return json_decode($response, true);
+}
+
+function uploadSubmissionData($url, $params, $fileData) {
+  global $tokenHeader;
+
+  $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
+  $postfields = $params;
+  $postfields['file'] = @$fileData;
+  $ch = curl_init();
+  $options = array(
+    CURLOPT_URL => $url,
+    CURLOPT_HEADER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => $headers,
+    CURLOPT_POSTFIELDS => $postfields,
+  ); // cURL options
+  curl_setopt_array($ch, $options);
+  curl_exec($ch);
+
+  $redirectURL = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+  curl_close($ch);
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $redirectURL);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // ask for results to be returned
+
+  // Send to remote and return data to caller.
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  return json_decode($response, true);
+}
+
+
 function updateAssignmentDates($courseID, $assignmentID, $dueDate, $unlockDate, $lockDate) {
   $apiURL = "courses/" . $courseID . "/assignments/" . $assignmentID;
   $assignmentParams = "assignment[due_at]=" . $dueDate . "&assignment[lock_at]=" . $lockDate . "&assignment[unlock_at]=" . $unlockDate;

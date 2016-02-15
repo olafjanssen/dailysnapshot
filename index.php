@@ -1,5 +1,4 @@
 <?php
-// do Oauth2 check
 require_once('lib/config.php');
 require_once('lib/state.php');
 
@@ -13,13 +12,13 @@ if (!State::courseId() || !State::canvasDomain()) {
 
 if (!State::accessToken()) {
   // log in
-  $uri = 'https://' . State::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId()) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . State::oauthState();
+  $uri = 'https://' . State::canvasDomain() . '/login/oauth2/auth?client_id=' . urlencode(Config::clientId(State::canvasDomain())) . '&response_type=code&redirect_uri=' . urlencode(Config::oauthCallbackURI()) . '&state=' . State::oauthState();
   header('Location: ' . $uri);
 } else {
   // refresh the access token
-  $data = array('client_id' => Config::clientId(),
+  $data = array('client_id' => Config::clientId(State::canvasDomain()),
     'redirect_uri' => urlencode($uri),
-    'client_secret' => rawurlencode(Config::clientSecret()),
+    'client_secret' => rawurlencode(Config::clientSecret(State::canvasDomain())),
     'refresh_token' => State::refreshToken(),
     'grant_type' => 'refresh_token');
 
@@ -32,8 +31,6 @@ if (!State::accessToken()) {
   $result = json_decode($result, true);
   State::setAccessToken($result['access_token']);
 }
-
-var_dump(State::createUploadLink());
 ?>
 
 <!DOCTYPE html>
@@ -69,6 +66,10 @@ var_dump(State::createUploadLink());
   </div>
 </section>
 <script>
+  // write the upload link
+  console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
+
+
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
 
   $(function () {

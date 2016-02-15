@@ -14,9 +14,9 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
   $code = $_GET['code'];
   $uri = urlencode(Config::oauthCallbackURI());
 
-  $data = array('client_id' => Config::clientId(),
+  $data = array('client_id' => Config::clientId(State::canvasDomain()),
     'redirect_uri' => urlencode($uri),
-    'client_secret' => rawurlencode(Config::clientSecret()),
+    'client_secret' => rawurlencode(Config::clientSecret(State::canvasDomain())),
     'code' => $code,
     'grant_type' => 'authorization_code');
 
