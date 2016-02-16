@@ -232,7 +232,6 @@ function submitAssignment($courseId, $assignmentId, $fileIds) {
 
 
 function uploadSubmissionFile($courseId, $assignmentId, $fileName, $contentType, $size) {
-//  $apiURL = "courses/" . $courseId . "/files";
   $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/self/files";
   $apiParams = "name=" . urlencode($fileName) . "&content_type=" . urlencode($contentType) . "&size=" . $size . "&on_duplicate=rename";
 
@@ -245,7 +244,7 @@ function uploadSubmissionData($url, $params, $fileData) {
 
   $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
   $postfields = $params;
-  $postfields['file'] = @$fileData;
+  $postfields['file'] = '@' . $fileData;
   $ch = curl_init();
   $options = array(
     CURLOPT_URL => $url,
@@ -308,6 +307,12 @@ function getPageBody($courseID, $page_url) {
 
 function getPageFromCourse($courseID, $page_url) {
   $apiUrl = "courses/" . $courseID . "/pages/" . $page_url;
+  $response = curlGet($apiUrl);
+  return $response;
+}
+
+function listGradableStudents($courseID, $assignmentID) {
+  $apiUrl = "courses/" . $courseID . "/assignments/" . $assignmentID . "/gradeable_students";
   $response = curlGet($apiUrl);
   return $response;
 }
