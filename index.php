@@ -62,7 +62,7 @@ if (!State::refreshToken()) {
   <h2>You've moved mountains today!</h2>
 
   <div id="select-wrapper">
-    <select id="student-filter">
+    <select id="student-filter" title="Student filter">
       <option>Show all</option>
     </select>
   </div>
@@ -77,19 +77,9 @@ if (!State::refreshToken()) {
 </form>
 
 <script>
-  // position the toast messages
-  toastr.options = {
-    "progressBar": true,
-    "positionClass": "toast-bottom-center"
-  }
 
   $(':file').change(function () {
     var file = this.files[0];
-    var name = file.name;
-    var size = file.size;
-    var type = file.type;
-    // Your validation
-    console.log(file, name, size, type);
 
     var formData = new FormData($('form')[0]);
     $.ajax({
@@ -115,15 +105,14 @@ if (!State::refreshToken()) {
     });
   });
 
-  function beforeSendHandler(e) {
+  function beforeSendHandler() {
     document.body.classList.add('uploading');
   }
 
-  function completeHandler(e) {
+  function completeHandler() {
+    // show new results
     document.body.classList.remove('uploading');
-    var message = JSON.parse(e);
-
-    toastr.error(message);
+    loadSubmissions();
   }
 
   function errorHandler(e) {
@@ -150,7 +139,7 @@ if (!State::refreshToken()) {
 
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
 
-  $(function () {
+  function loadSubmissions(){
     $.getJSON("submissions.php", function (resp) {
       var submissions = resp;
 
@@ -164,7 +153,7 @@ if (!State::refreshToken()) {
         document.getElementById('student-filter').appendChild(option);
       });
 
-      selectElement.addEventListener('change', function (e) {
+      selectElement.addEventListener('change', function () {
         var selectedIndex = selectElement.selectedIndex;
         showSubmissionIndex(selectedIndex);
       });
@@ -348,6 +337,10 @@ if (!State::refreshToken()) {
       }
 
     });
+  }
+
+  $(function () {
+    loadSubmissions();
   });
 </script>
 
