@@ -69,19 +69,14 @@ if (!State::refreshToken()) {
 <a id="view-dummy-link" href="index.php">view your dummy</a>
 
 <script>
-  // position the toast messages
-  toastr.options = {
-    "progressBar": true,
-    "positionClass": "toast-bottom-center"
-  }
-
   $(':file').change(function () {
+    // position the toast messages
+    toastr.options = {
+      "progressBar": true,
+      "positionClass": "toast-bottom-center"
+    };
+
     var file = this.files[0];
-    var name = file.name;
-    var size = file.size;
-    var type = file.type;
-    // Your validation
-    console.log(file, name, size, type);
 
     var formData = new FormData();
     formData.append('file', document.getElementById("file-upload").files[0]);

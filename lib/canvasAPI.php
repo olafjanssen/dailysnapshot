@@ -110,12 +110,11 @@ function curlPut($url, $data) {
   return $response;
 }
 
-function curlDelete($url, $header) {
+function curlDelete($url) {
   global $tokenHeader;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, 'https://' . State::canvasDomain() . '/api/v1/' . $url);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-  // $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $tokenHeader);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

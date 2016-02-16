@@ -2,12 +2,12 @@
 
 require_once('lib/canvasAPI.php');
 
-$outcomeGroups = getOutcomeGroups(Config::courseId());
+$outcomeGroups = getOutcomeGroups(State::courseId());
 //$result = listAssignments(Config::courseId());
 
 var_dump($outcomeGroups[0]->id);
 
-$result = createOutcomeSubGroup(Config::courseId(), $outcomeGroups[0]->id, 'Strategie en Concept', 'Omschrijving');
+$result = createOutcomeSubGroup(State::courseId(), $outcomeGroups[0]->id, 'Strategie en Concept', 'Omschrijving');
 
 
 var_dump($result);
@@ -35,7 +35,7 @@ var_dump($result);
   <h2>You've moved mountains today!</h2>
 
   <div id="select-wrapper">
-    <select id="student-filter">
+    <select id="student-filter" title="Student filter">
       <option>Show all</option>
     </select>
   </div>

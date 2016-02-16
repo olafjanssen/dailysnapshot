@@ -56,7 +56,7 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
   <h2>You've moved mountains today!</h2>
 
   <div id="select-wrapper">
-    <select id="student-filter">
+    <select id="student-filter" title="Student filter">
       <option>Show all</option>
     </select>
   </div>

@@ -267,7 +267,7 @@ var courseId = '1276',
   baseUrl = 'https://fhict.instructure.com';
 
 function getOutcomeGroups(courseId, callback) {
-  apiUrl = baseUrl + "/api/v1/courses/" + courseId + '/outcome_groups';
+  var apiUrl = baseUrl + "/api/v1/courses/" + courseId + '/outcome_groups';
 
   $.get(apiUrl, function (a) {
     callback(a);
@@ -275,8 +275,8 @@ function getOutcomeGroups(courseId, callback) {
 }
 
 function createOutcomeSubGroup(courseId, outcomeGroupId, title, description, callback) {
-  apiUrl = baseUrl + '/api/v1/courses/' + courseId + '/outcome_groups/' + outcomeGroupId + '/subgroups';
-  params = {
+  var apiUrl = baseUrl + '/api/v1/courses/' + courseId + '/outcome_groups/' + outcomeGroupId + '/subgroups';
+  var params = {
     title: title,
     description: description
   };

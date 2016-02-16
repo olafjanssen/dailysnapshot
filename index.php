@@ -146,11 +146,16 @@ if (!State::refreshToken()) {
       var selectElement = document.getElementById('student-filter');
 
       var students = [];
+      selectElement.innerHTML = '';
+      var firstOption = document.createElement('option');
+      firstOption.innerHTML = 'Show all';
+      selectElement.appendChild(firstOption);
+
       submissions.forEach(function (submission) {
         students.push(submission.user);
         var option = document.createElement('option');
         option.innerHTML = submission.user['sortable_name'];
-        document.getElementById('student-filter').appendChild(option);
+        selectElement.appendChild(option);
       });
 
       selectElement.addEventListener('change', function () {
