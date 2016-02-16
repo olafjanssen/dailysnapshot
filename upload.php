@@ -69,6 +69,11 @@ if (!State::refreshToken()) {
 <a id="view-dummy-link" href="index.php">view your dummy</a>
 
 <script>
+  // position the toast messages
+  toastr.options = {
+    "progressBar": true,
+    "positionClass": "toast-bottom-center"
+  }
 
   $(':file').change(function () {
     var file = this.files[0];

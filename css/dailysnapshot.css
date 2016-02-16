@@ -91,6 +91,15 @@ h2 {
   width: 14em;
 }
 
+#student-filter[disabled] {
+  border: none;
+  width: auto;
+}
+
+#select-wrapper[disabled]::after {
+  content: '';
+}
+
 #select-wrapper {
   position: absolute;
   margin: 1em;

@@ -77,6 +77,11 @@ if (!State::refreshToken()) {
 </form>
 
 <script>
+  // position the toast messages
+  toastr.options = {
+    "progressBar": true,
+    "positionClass": "toast-bottom-center"
+  }
 
   $(':file').change(function () {
     var file = this.files[0];
@@ -164,7 +169,14 @@ if (!State::refreshToken()) {
         showSubmissionIndex(selectedIndex);
       });
 
-      showSubmissionIndex(0);
+      if (submissions.length == 1) {
+        showSubmissionIndex(1);
+        selectElement.selectedIndex = 1;
+        selectElement.setAttribute('disabled', 'true');
+        selectElement.parentNode.setAttribute('disabled', 'true');
+      } else {
+        showSubmissionIndex(0);
+      }
 
       function showSubmissionIndex(selectedIndex) {
         var articles = [];
@@ -286,6 +298,7 @@ if (!State::refreshToken()) {
                   article.appendChild(iframe);
                   break;
                 default:
+                  console.log('unknown mime:', contentType);
                   var icon = document.createElement('i');
                   icon.setAttribute('class', 'fa fa-2x file-icon');
                   switch (contentType) {
