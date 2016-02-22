@@ -43,6 +43,7 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
   <title>Digital Dummy - authorization</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
@@ -63,11 +64,8 @@ if (!$_GET['error'] && $_GET['code'] && $_GET['state'] === State::oauthState()) 
 </header>
 
 <section id="student-blog" class="container">
-  <div class="pong-loader">
-
-  </div>
+  <a href="<?php echo State::oauthStateUri(); ?>">return</a>
 </section>
-
 </body>
 </html>
 

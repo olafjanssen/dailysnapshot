@@ -16,7 +16,7 @@ class State {
     if (array_key_exists('custom_canvas_course_id', $_POST)) {
       $_SESSION['courseId'] = $_POST['custom_canvas_course_id'];
       $_SESSION['canvasDomain'] = $_POST['custom_canvas_api_domain'];
-      $_SESSION['oauthState'] = base64_encode(substr(md5(rand()), 0, 7) . 'index.php');
+      $_SESSION['oauthState'] = base64_encode(substr(md5(rand()), 0, 7) . ',index.php');
     }
   }
 
@@ -55,11 +55,12 @@ class State {
   }
 
   public static function setRefreshToken($refreshToken) {
-    setcookie(sha1(self::courseId() . self::canvasDomain()), $refreshToken, time() + 3600 * 24 * 30);
+    setcookie(sha1(self::courseId() . self::canvasDomain()), $refreshToken, time() + 3600 * 24 * 30, '/', Config::baseDomain(), true, true);
   }
 
   public static function oauthStateUri() {
     if (array_key_exists('oauthState', $_SESSION)) {
+      var_dump(base64_decode($_SESSION['oauthState']));
       $data = explode(',', base64_decode($_SESSION['oauthState']), 2);
       return $data[1];
     }
