@@ -30,7 +30,7 @@ class State {
       $_SESSION['courseId'] = $data[0];
       $_SESSION['assignmentId'] = $data[1];
       $_SESSION['canvasDomain'] = $data[2];
-      $_SESSION['oauthState'] = base64_encode(substr(md5(rand()), 0, 7) . ',upload.php');
+      $_SESSION['oauthState'] = base64_encode(substr(md5(rand()), 0, 7) . ',upload.php?q=' . $_GET['q']);
     }
   }
 
