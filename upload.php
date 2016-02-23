@@ -69,6 +69,11 @@ if (!State::refreshToken()) {
 <a id="view-dummy-link" href="index.php">view your dummy</a>
 
 <script>
+  $("a").click(function (event) {
+    event.preventDefault();
+    window.location = $(this).attr("href");
+  });
+
   $(':file').change(function () {
     // position the toast messages
     toastr.options = {
