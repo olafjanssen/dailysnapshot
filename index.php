@@ -136,10 +136,9 @@ if (!State::refreshToken()) {
   // write the upload link
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
-
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
 
-  function loadSubmissions(){
+  function loadSubmissions() {
     $.getJSON("submissions.php", function (resp) {
       var submissions = resp;
 
@@ -201,8 +200,21 @@ if (!State::refreshToken()) {
         });
 
         var dateString = '';
-        articles.forEach(function (attempt) {
 
+        var hiddenArticles = articles;
+        appendFrom(hiddenArticles, 10);
+
+        function appendFrom(attempts, pageLength) {
+          for (var i = 0; i < pageLength; i++) {
+            var attempt = attempts.shift();
+            if (!attempt) {
+              break;
+            }
+            append(attempt);
+          }
+        }
+
+        function append(attempt) {
           var date = attempt.submitted_at ? attempt.submitted_at : attempt.created_at;
           var newDateString = moment(date).format('dddd, MMMM Do');
           if (newDateString !== dateString) {
@@ -220,6 +232,7 @@ if (!State::refreshToken()) {
             attempt.attachments.forEach(function (attachment) {
               var article = document.createElement('article');
               article.classList.add('row');
+              article.classList.add('hidden-row');
               var contentType = attachment['content-type'];
               switch (contentType) {
                 case 'image/gif':
@@ -335,11 +348,20 @@ if (!State::refreshToken()) {
             article.appendChild(paragraph);
             section.appendChild(article);
           }
+        }
 
-        });
+        window.onscroll = respondToScroll;
+
+        function respondToScroll() {
+          console.log(window.scrollY + 1.5 * window.innerHeight - document.body.clientHeight);
+          if (window.scrollY + 1.5 * window.innerHeight - document.body.clientHeight > 0) {
+            appendFrom(hiddenArticles, 10);
+          }
+        }
 
         document.body.appendChild(section);
       }
+
 
     });
   }
@@ -348,7 +370,6 @@ if (!State::refreshToken()) {
     loadSubmissions();
   });
 </script>
-
 
 </body>
 </html>
