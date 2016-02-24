@@ -222,7 +222,6 @@ anchorme.order = function (str, seperator, addattrs) {
         sm = url.slice(0, -1);
         pm = '.';
       }
-      console.log(url);
       if (isurl) {
         if (typeof addattrs === "object") {
           splitedArray[i] = "<a href='" + url + "'";
