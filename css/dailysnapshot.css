@@ -130,6 +130,7 @@ article {
   background-color: white;
   margin-bottom: 2rem;
   border-radius: 2px;
+  position: relative;
   overflow: hidden;
   width: 100%;
 }
@@ -215,4 +216,23 @@ h4 {
   min-height: 30em;
   display: block;
   width: 100%;
+}
+
+.row > header {
+  transition: opacity 0.2s;
+  pointer-events: none;
+  position: absolute;
+  text-align: right;
+  background: black;
+  color: #ddd;
+  opacity: 0;
+  right: 0;
+}
+
+.row:hover > header {
+  opacity: 0.8;
+}
+
+.row-author {
+  margin-left: 1em;
 }

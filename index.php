@@ -157,6 +157,12 @@ if (!State::refreshToken()) {
         selectElement.appendChild(option);
       });
 
+      function getStudentNameForId(id) {
+        return students.filter(function (user) {
+          return user.id === id;
+        })[0].sortable_name;
+      }
+
       selectElement.addEventListener('change', function () {
         var selectedIndex = selectElement.selectedIndex;
         showSubmissionIndex(selectedIndex);
@@ -232,7 +238,20 @@ if (!State::refreshToken()) {
             attempt.attachments.forEach(function (attachment) {
               var article = document.createElement('article');
               article.classList.add('row');
-              article.classList.add('hidden-row');
+
+              // add metaheader
+              var metaheader = document.createElement('header');
+              var time = document.createElement('time');
+              time.innerHTML = moment(date).format('LT');
+              metaheader.appendChild(time);
+              if (selectElement.selectedIndex === 0) {
+                var author = document.createElement('span');
+                author.classList.add('row-author');
+                author.innerHTML = getStudentNameForId(attempt.user_id);
+                metaheader.appendChild(author);
+              }
+              article.appendChild(metaheader);
+
               var contentType = attachment['content-type'];
               switch (contentType) {
                 case 'image/gif':
@@ -333,6 +352,19 @@ if (!State::refreshToken()) {
             var article = document.createElement('article');
             article.classList.add('row');
 
+            // add metaheader TODO REMOVE CODE DUPLICATE except for author id
+            var metaheader = document.createElement('header');
+            var time = document.createElement('time');
+            time.innerHTML = moment(date).format('LT');
+            metaheader.appendChild(time);
+            if (selectElement.selectedIndex === 0) {
+              var author = document.createElement('span');
+              author.classList.add('row-author');
+              author.innerHTML = getStudentNameForId(attempt.author_id);
+              metaheader.appendChild(author);
+            }
+            article.appendChild(metaheader);
+
             var avatar = document.createElement('img');
             avatar.src = attempt.author.avatar_image_url;
             avatar.classList.add('avatar');
@@ -353,7 +385,6 @@ if (!State::refreshToken()) {
         window.onscroll = respondToScroll;
 
         function respondToScroll() {
-          console.log(window.scrollY + 1.5 * window.innerHeight - document.body.clientHeight);
           if (window.scrollY + 1.5 * window.innerHeight - document.body.clientHeight > 0) {
             appendFrom(hiddenArticles, 10);
           }
@@ -361,8 +392,6 @@ if (!State::refreshToken()) {
 
         document.body.appendChild(section);
       }
-
-
     });
   }
 
