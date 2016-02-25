@@ -256,15 +256,10 @@ if (!State::refreshToken()) {
               switch (contentType) {
                 case 'image/gif':
                 case 'image/png':
-                  img = document.createElement('img');
-                  img.src = attachment.url;
-                  img.classList.add('blog-image');
-                  article.appendChild(img);
-                  break;
                 case 'image/jpeg':
                 case 'image/jpg':
                   img = document.createElement('img');
-                  img.src = 'jpegProxy.php?path=' + encodeURIComponent(attachment.url);
+                  img.src = attachment.url;
                   img.classList.add('blog-image');
                   article.appendChild(img);
                   break;
