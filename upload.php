@@ -51,6 +51,7 @@ if (!State::refreshToken()) {
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="js/upload.js"></script>
 </head>
 <body>
 <header>
@@ -73,61 +74,6 @@ if (!State::refreshToken()) {
     event.preventDefault();
     window.location = $(this).attr("href");
   });
-
-  $(':file').change(function () {
-    // position the toast messages
-    toastr.options = {
-      "progressBar": true,
-      "positionClass": "toast-bottom-center"
-    };
-
-    var file = this.files[0];
-
-    var formData = new FormData();
-    formData.append('file', document.getElementById("file-upload").files[0]);
-
-    $.ajax({
-      url: 'submission.php',  //Server script to process data
-      type: 'POST',
-      xhr: function () {  // Custom XMLHttpRequest
-        var myXhr = $.ajaxSettings.xhr();
-        if (myXhr.upload) { // Check if upload property exists
-          myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // For handling the progress of the upload
-        }
-        return myXhr;
-      },
-      //Ajax events
-      beforeSend: beforeSendHandler,
-      success: completeHandler,
-      error: errorHandler,
-      // Form data
-      data: formData,
-      //Options to tell jQuery not to process data or worry about content-type.
-      cache: false,
-      contentType: false,
-      processData: false
-    });
-  });
-
-  function beforeSendHandler(e) {
-    document.body.classList.add('uploading');
-  }
-
-  function completeHandler(e) {
-    document.body.classList.remove('uploading');
-    toastr.success('Upload completed!');
-  }
-
-  function errorHandler(e) {
-    document.body.classList.remove('uploading');
-    toastr.error('Upload error:', e);
-  }
-
-  function progressHandlingFunction(e) {
-    if (e.lengthComputable) {
-      $('progress').attr({value: e.loaded, max: e.total});
-    }
-  }
 </script>
 </body>
 </html>
