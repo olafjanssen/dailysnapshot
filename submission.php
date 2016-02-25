@@ -10,6 +10,7 @@ require_once('lib/config.php');
 require_once('lib/state.php');
 require_once('lib/canvasAPI.php');
 
+
 $fileIds = [];
 foreach ($_FILES as $key => $file) {
 
@@ -18,4 +19,6 @@ foreach ($_FILES as $key => $file) {
   $fileIds[] = $res['id'];
 }
 
-echo json_encode(submitAssignment(State::courseId(), State::assignmentId(), $fileIds));
+$submitted =  submitAssignment(State::courseId(), State::assignmentId(), $fileIds);
+
+echo json_encode($submitted);

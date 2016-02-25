@@ -15,7 +15,7 @@ require_once 'lib/canvasAPI.php';
 header('Content-type: application/json');
 
 // find the correct assignment
-if (!State::assignmentId()) {
+//if (!State::assignmentId()) {
   $daily = searchAssignment(State::courseId(), 'Digital Dummy');
   if (count($daily) > 0) {
     State::setAssignmentId($daily[0]->id);
@@ -28,7 +28,8 @@ if (!State::assignmentId()) {
     $assignmentId = createGenericAssignment(State::courseId(), $data);
     State::setAssignmentId($assignmentId);
   }
-}
+//}
 
 $submissions = listAssignmentsSubmissionHistory(State::courseId(), State::assignmentId(), 'all');
+
 echo json_encode($submissions);
