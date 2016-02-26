@@ -52,6 +52,7 @@ if (!State::refreshToken()) {
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
   <script src="js/upload.js"></script>
@@ -206,112 +207,115 @@ if (!State::refreshToken()) {
           if (attempt.attachments) {
             var img, audio, video, mediaSource, iframe;
             attempt.attachments.forEach(function (attachment) {
-              var article = document.createElement('article');
-              article.classList.add('row');
+                var article = document.createElement('article');
+                article.classList.add('row');
 
-              // add metaheader
-              var metaheader = document.createElement('header');
-              var time = document.createElement('time');
-              time.innerHTML = moment(date).format('LT');
-              metaheader.appendChild(time);
-              if (selectElement.selectedIndex === 0) {
-                var author = document.createElement('span');
-                author.classList.add('row-author');
-                author.innerHTML = getStudentNameForId(attempt.user_id);
-                metaheader.appendChild(author);
-              }
-              article.appendChild(metaheader);
+                // add metaheader
+                var metaheader = document.createElement('header');
+                var time = document.createElement('time');
+                time.innerHTML = moment(date).format('LT');
+                metaheader.appendChild(time);
+                if (selectElement.selectedIndex === 0) {
+                  var author = document.createElement('span');
+                  author.classList.add('row-author');
+                  author.innerHTML = getStudentNameForId(attempt.user_id);
+                  metaheader.appendChild(author);
+                }
+                article.appendChild(metaheader);
 
-              var contentType = attachment['content-type'];
-              switch (contentType) {
-                case 'image/gif':
-                case 'image/png':
-                case 'image/jpeg':
-                case 'image/jpg':
-                  img = document.createElement('img');
-                  img.src = attachment.url;
-                  img.classList.add('blog-image');
-                  article.appendChild(img);
-                  break;
-                case 'audio/aac':
-                case 'audio/mp4':
-                case 'audio/mpeg':
-                case 'audio/ogg':
-                case 'audio/wav':
-                case 'audio/webm':
-                  audio = document.createElement('audio');
-                  audio.setAttribute('controls', 'true');
-                  audio.src = attachment.url;
-                  audio.classList.add('blog-image');
-                  mediaSource = document.createElement('source');
-                  mediaSource.setAttribute('src', attachment.url);
-                  mediaSource.setAttribute('type', contentType);
-                  audio.appendChild(mediaSource);
-                  article.appendChild(audio);
-                  break;
-                case 'video/quicktime':
-                case 'video/mp4':
-                case 'video/ogg':
-                case 'video/webm':
-                  video = document.createElement('video');
-                  video.setAttribute('controls', 'true');
-                  video.src = attachment.url;
-                  video.classList.add('blog-image');
-                  mediaSource = document.createElement('source');
-                  mediaSource.setAttribute('src', attachment.url);
-                  mediaSource.setAttribute('type', contentType);
-                  video.appendChild(mediaSource);
-                  article.appendChild(video);
-                  break;
-                case 'application/pdf':
-                case 'application/msword':
-                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                case 'application/vnd.ms-powerpoint':
-                case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                case 'application/vnd.ms-excel':
-                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                case 'text/plain':
-                case 'application/x-python':
-                case 'text/x-python':
-                case 'text/javascript':
-                case 'application/x-javascript':
-                case 'text/xml':
-                case 'application/xml':
-                case 'text/css':
-                case 'text/x-markdown':
-                case 'text/x-script.perl':
-                case 'text/x-c':
-                case 'text/x-m':
-                case 'application/json':
-                  iframe = document.createElement('iframe');
-                  iframe.setAttribute('src', canvasDomain + attachment.preview_url);
-                  iframe.classList.add('blog-embed');
-                  article.appendChild(iframe);
-                  break;
-                default:
-                  console.log('unknown mime:', contentType, attachment);
-                  var icon = document.createElement('i');
-                  icon.setAttribute('class', 'fa fa-2x file-icon');
-                  switch (contentType) {
-                    case 'application/zip':
-                    case 'application/x-rar-compressed':
-                      icon.classList.add('fa-file-zip-o');
+                var contentType = attachment['content-type'];
+                switch (contentType) {
+                  case 'image/gif':
+                  case 'image/png':
+                  case 'image/jpeg':
+                  case 'image/jpg':
+                    img = document.createElement('img');
+                    img.src = attachment.url;
+                    img.classList.add('blog-image');
+                    article.appendChild(img);
+                    break;
+                  case 'audio/aac':
+                  case 'audio/mp4':
+                  case 'audio/mpeg':
+                  case 'audio/ogg':
+                  case 'audio/wav':
+                  case 'audio/webm':
+                    audio = document.createElement('audio');
+                    audio.setAttribute('controls', 'true');
+                    audio.src = attachment.url;
+                    audio.classList.add('blog-image');
+                    mediaSource = document.createElement('source');
+                    mediaSource.setAttribute('src', attachment.url);
+                    mediaSource.setAttribute('type', contentType);
+                    audio.appendChild(mediaSource);
+                    article.appendChild(audio);
+                    break;
+                  case 'video/quicktime':
+                  case 'video/mp4':
+                  case 'video/ogg':
+                  case 'video/webm':
+                    video = document.createElement('video');
+                    video.setAttribute('controls', 'true');
+                    video.src = attachment.url;
+                    video.classList.add('blog-image');
+                    mediaSource = document.createElement('source');
+                    mediaSource.setAttribute('src', attachment.url);
+                    mediaSource.setAttribute('type', contentType);
+                    video.appendChild(mediaSource);
+                    article.appendChild(video);
+                    break;
+                  case 'application/pdf':
+                  case 'application/msword':
+                  case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                  case 'application/vnd.ms-powerpoint':
+                  case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                  case 'application/vnd.ms-excel':
+                  case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                  case 'text/plain':
+                  case 'application/x-python':
+                  case 'text/x-python':
+                  case 'text/javascript':
+                  case 'application/x-javascript':
+                  case 'text/xml':
+                  case 'application/xml':
+                  case 'text/css':
+                  case 'text/x-markdown':
+                  case 'text/x-script.perl':
+                  case 'text/x-c':
+                  case 'text/x-m':
+                  case 'application/json':
+                    if (window.self !== window.top) {
+                      iframe = document.createElement('iframe');
+                      iframe.setAttribute('src', canvasDomain + attachment.preview_url);
+                      iframe.classList.add('blog-embed');
+                      article.appendChild(iframe);
                       break;
-                    default:
-                      icon.classList.add('fa-file-image-o');
-                      break;
-                  }
-                  article.appendChild(icon);
+                    }
+                  default:
+                    console.log('unknown mime:', contentType, attachment);
+                    var icon = document.createElement('i');
+                    icon.setAttribute('class', 'fa fa-2x file-icon');
+                    switch (contentType) {
+                      case 'application/zip':
+                      case 'application/x-rar-compressed':
+                        icon.classList.add('fa-file-zip-o');
+                        break;
+                      default:
+                        icon.classList.add('fa-file-image-o');
+                        break;
+                    }
+                    article.appendChild(icon);
 
-                  var anchor = document.createElement('a');
-                  anchor.innerHTML = attachment.filename;
-                  anchor.href = attachment.url;
-                  article.classList.add('file');
-                  article.appendChild(anchor);
-                  break;
+                    var anchor = document.createElement('a');
+                    anchor.innerHTML = attachment.filename;
+                    anchor.href = attachment.url;
+                    article.classList.add('file');
+                    article.appendChild(anchor);
+                    break;
+                }
+                section.appendChild(article);
               }
-              section.appendChild(article);
-            });
+            );
           }
           if (attempt.comment) {
             var article = document.createElement('article');
@@ -373,7 +377,8 @@ if (!State::refreshToken()) {
 
         document.body.appendChild(section);
       }
-    });
+    })
+    ;
   }
 
   $(function () {
@@ -383,7 +388,7 @@ if (!State::refreshToken()) {
 
 <script>
   if ('addEventListener' in document) {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       FastClick.attach(document.body);
     }, false);
   }
