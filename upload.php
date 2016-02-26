@@ -38,7 +38,7 @@ if (!State::refreshToken()) {
 <head>
   <title>Digital Dummy</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
 
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
@@ -52,6 +52,7 @@ if (!State::refreshToken()) {
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/upload.js"></script>
 </head>
 <body>
@@ -92,6 +93,12 @@ if (!State::refreshToken()) {
 <a id="view-dummy-link" href="index.php">view your dummy</a>
 
 <script>
+  if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+      FastClick.attach(document.body);
+    }, false);
+  }
+
   $("a").click(function (event) {
     event.preventDefault();
     window.location = $(this).attr("href");

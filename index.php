@@ -38,9 +38,7 @@ if (!State::refreshToken()) {
 <head>
   <title>Digital Dummy</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
 
   <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png">
@@ -380,6 +378,19 @@ if (!State::refreshToken()) {
 
   $(function () {
     loadSubmissions();
+  });
+</script>
+
+<script>
+  if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+      FastClick.attach(document.body);
+    }, false);
+  }
+
+  $("a").click(function (event) {
+    event.preventDefault();
+    window.location = $(this).attr("href");
   });
 </script>
 
