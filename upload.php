@@ -42,6 +42,7 @@ if (!State::refreshToken()) {
   <meta name="apple-mobile-web-app-capable" content="yes">
 
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
+  <link rel="stylesheet" href="bower_components/css-modal/build/modal.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
   <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png">
@@ -57,15 +58,36 @@ if (!State::refreshToken()) {
 <header>
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
-</header
+</header>
 
 <form enctype="multipart/form-data" id="upload-form">
   <div id="file-upload-wrapper">
     <i class="fa fa-upload"></i>
-    <input name="file" type="file" id="file-upload">
+    <span>media</span>
+    <input name="file" type="file" id="file-upload"/>
   </div>
+  <a id="text-upload-wrapper" href="#modal-text">
+    <i class="fa fa-plus-square"></i>
+    <span>text</span>
+  </a>
   <progress></progress>
 </form>
+
+<section class="modal--show" id="modal-text" tabindex="-1"
+         role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+
+  <div class="modal-inner">
+    <form id="text-upload-form">
+      <div class="modal-content">
+        <textarea required placeholder="Type your submission text here." id="submission-text"></textarea>
+        <button type="submit" id="text-submit">submit text</button>
+      </div>
+    </form>
+  </div>
+
+  <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+     data-dismiss="modal">?</a>
+</section>
 
 <a id="view-dummy-link" href="index.php">view your dummy</a>
 
@@ -75,5 +97,6 @@ if (!State::refreshToken()) {
     window.location = $(this).attr("href");
   });
 </script>
+<script src="bower_components/css-modal/modal.js"></script>
 </body>
 </html>

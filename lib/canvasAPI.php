@@ -229,6 +229,12 @@ function submitAssignment($courseId, $assignmentId, $fileIds) {
   return $response;
 }
 
+function submitTextAssignment($courseId, $assignmentId, $text) {
+  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions";
+  $assignmentParams = "submission[submission_type]=online_text_entry&submission[body]=" . urlencode($text);
+  $response = curlPost($apiURL, $assignmentParams);
+  return $response;
+}
 
 function uploadSubmissionFile($courseId, $assignmentId, $fileName, $contentType, $size) {
   $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/self/files";

@@ -10,7 +10,6 @@ require_once('lib/config.php');
 require_once('lib/state.php');
 require_once('lib/canvasAPI.php');
 
-
 $fileIds = [];
 foreach ($_FILES as $key => $file) {
 

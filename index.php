@@ -46,6 +46,7 @@ if (!State::refreshToken()) {
   <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png">
   <link rel="icon" type="image/png" href="img/digitaldummy.png">
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
+  <link rel="stylesheet" href="bower_components/css-modal/build/modal.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
@@ -72,10 +73,31 @@ if (!State::refreshToken()) {
 <form enctype="multipart/form-data" id="upload-form">
   <div id="file-upload-wrapper">
     <i class="fa fa-upload"></i>
-    <input name="file" type="file" id="file-upload">
+    <span>media</span>
+    <input name="file" type="file" id="file-upload"/>
   </div>
+  <a id="text-upload-wrapper" href="#modal-text">
+    <i class="fa fa-plus-square"></i>
+    <span>text</span>
+  </a>
   <progress></progress>
 </form>
+
+<section class="modal--show" id="modal-text" tabindex="-1"
+         role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+
+  <div class="modal-inner">
+    <form id="text-upload-form">
+      <div class="modal-content">
+        <textarea required placeholder="Type your submission text here." id="submission-text"></textarea>
+        <button type="submit" id="text-submit">submit text</button>
+      </div>
+    </form>
+  </div>
+
+  <a href="#!" class="modal-close" title="Close this modal" data-close="Close"
+     data-dismiss="modal">?</a>
+</section>
 
 <section id="student-blog" class="container">
   <div class="pong-loader">
@@ -143,9 +165,9 @@ if (!State::refreshToken()) {
         var section = document.getElementById('student-blog');
         section.innerHTML = '';
 
-        // filter out submissions that are not comments or attached files (should not occur in practice)
+        // filter out submissions that are not comments, text entries, or attached files (should not occur in practice)
         articles = articles.filter(function (article) {
-          return article.comment || article.attachments;
+          return article.comment || article.body || article.attachments;
         });
 
         articles.sort(function (a, b) {
@@ -269,7 +291,7 @@ if (!State::refreshToken()) {
                   article.appendChild(iframe);
                   break;
                 default:
-                  console.log('unknown mime:', contentType);
+                  console.log('unknown mime:', contentType, attachment);
                   var icon = document.createElement('i');
                   icon.setAttribute('class', 'fa fa-2x file-icon');
                   switch (contentType) {
@@ -310,18 +332,34 @@ if (!State::refreshToken()) {
             }
             article.appendChild(metaheader);
 
-            var avatar = document.createElement('img');
-            avatar.src = attempt.author.avatar_image_url;
-            avatar.classList.add('avatar');
-            var author = document.createElement('em');
-            author.innerHTML = attempt.author.display_name;
-            author.classList.add('author');
             var paragraph = document.createElement('p');
             paragraph.innerHTML = anchorme.js(attempt.comment); // replaces links!
 
             article.classList.add('comment');
-            article.appendChild(avatar);
-            article.appendChild(author);
+            article.appendChild(paragraph);
+            section.appendChild(article);
+          }
+          if (attempt.body) {
+            var article = document.createElement('article');
+            article.classList.add('row');
+
+            // add metaheader TODO REMOVE CODE DUPLICATE except for author id
+            var metaheader = document.createElement('header');
+            var time = document.createElement('time');
+            time.innerHTML = moment(date).format('LT');
+            metaheader.appendChild(time);
+            if (selectElement.selectedIndex === 0) {
+              var author = document.createElement('span');
+              author.classList.add('row-author');
+              author.innerHTML = getStudentNameForId(attempt.user_id);
+              metaheader.appendChild(author);
+            }
+            article.appendChild(metaheader);
+
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = anchorme.js(attempt.body); // replaces links!
+
+            article.classList.add('comment');
             article.appendChild(paragraph);
             section.appendChild(article);
           }
@@ -345,5 +383,6 @@ if (!State::refreshToken()) {
   });
 </script>
 
+<script src="bower_components/css-modal/modal.js"></script>
 </body>
 </html>

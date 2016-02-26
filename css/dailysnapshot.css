@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
 body {
-  background-color: rgb(240,240,240);
+  background-color: rgb(240, 240, 240);
   font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
@@ -15,36 +15,57 @@ body {
   margin: 5em auto 0;
 }
 
-header {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+body > header {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   background-color: white;
   margin: 0 0 1em;
   padding: 0.5em;
   color: #333;
 }
 
+#upload-form {
+  text-align: center;
+}
+
+#text-upload-wrapper,
 #file-upload-wrapper {
   background-color: lightgreen;
+  display: inline-block;
   position: relative;
   border-radius: 5em;
   overflow: hidden;
-  margin: 3em auto;
+  margin: 3em 0.5em;
   height: 5em;
   width: 5em;
 }
 
+#text-upload-wrapper:active,
 #file-upload-wrapper:active {
   background-color: darkgreen;
 }
 
+#text-upload-wrapper:active span,
+#file-upload-wrapper:active span,
+#text-upload-wrapper:active i,
 #file-upload-wrapper:active i {
   color: lightgreen;
 }
 
+#text-upload-wrapper i,
 #file-upload-wrapper i {
+  font-size: 2.5em;
   color: darkgreen;
-  font-size: 3em;
-  margin: 0.37em;
+  margin: 0.3em;
+}
+
+#text-upload-wrapper span,
+#file-upload-wrapper span {
+  position: absolute;
+  text-align: center;
+  color: darkgreen;
+  bottom: 0.5em;
+  width: 100%;
+  left: 0;
 }
 
 #file-upload {
@@ -69,7 +90,6 @@ progress {
 .uploading progress {
   display: block;
 }
-
 
 h1 {
   font-size: 1.5em;
@@ -125,7 +145,7 @@ h2 {
 }
 
 article {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.2s ease-in-out;
   background-color: white;
   margin-bottom: 2rem;
@@ -137,7 +157,7 @@ article {
 
 article.comment {
   box-sizing: border-box;
-  padding: 0.5rem 2rem;
+  padding: 0 2rem;
 }
 
 article.file {
@@ -235,4 +255,34 @@ h4 {
 
 .row-author {
   margin-left: 1em;
+}
+
+#text-submit {
+  background-color: lightgreen;
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-align: center;
+  color: darkgreen;
+  border: none;
+}
+
+#text-submit:active {
+  background-color: darkgreen;
+  color: lightgreen;
+}
+
+#submission-text {
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  line-height: 130%;
+  margin: 0.5em 0;
+  display: block;
+  padding: 0.5em;
+  width: 100%;
+  height: 5em;
+}
+
+#text-upload-form {
+  text-align: right;
 }
