@@ -18,10 +18,13 @@ $().ready(function () {
         document.body.classList.add('uploading');
       },
       success: function () {
+        // reset form
+        //$('#upload-form').reset();
+        document.getElementById('upload-form').reset();
         // show new results
         document.body.classList.remove('uploading');
         toastr.success('Upload completed!');
-        if (window.hasOwnProperty(loadSubmissions)) {
+        if (window.hasOwnProperty('loadSubmissions')) {
           loadSubmissions();
         }
       },
@@ -65,11 +68,12 @@ $().ready(function () {
           document.body.classList.add('uploading');
         },
         success: function () {
+          uploadForm.reset();
           // show new results
           document.body.classList.remove('uploading');
+          toastr.success('Text upload completed!');
           // reload submissions if function exists
-          console.log(loadSubmissions);
-          if (loadSubmissions) {
+          if (window.hasOwnProperty('loadSubmissions')) {
             loadSubmissions();
           }
         },

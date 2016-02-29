@@ -359,7 +359,7 @@ if (!State::refreshToken()) {
             article.appendChild(metaheader);
 
             var paragraph = document.createElement('p');
-            paragraph.innerHTML = anchorme.js(attempt.body); // replaces links!
+            paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g,'<br>')); // replaces links!
 
             article.classList.add('comment');
             article.appendChild(paragraph);
