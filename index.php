@@ -49,6 +49,7 @@ if (!State::refreshToken()) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
   <link rel="stylesheet" href="css/pong.css">
+  <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -88,7 +89,7 @@ if (!State::refreshToken()) {
   <div class="modal-inner">
     <form id="text-upload-form">
       <div class="modal-content">
-        <textarea required placeholder="Type your submission text here." id="submission-text"></textarea>
+        <div id="submission-text" placeholder="Type your submission text here."></div>
         <button type="submit" id="text-submit">submit text</button>
       </div>
     </form>
@@ -405,5 +406,20 @@ if (!State::refreshToken()) {
 </script>
 
 <script src="bower_components/css-modal/modal.js"></script>
+<script src="bower_components/trumbowyg/dist/trumbowyg.min.js"></script>
+<script>
+  $('#submission-text').trumbowyg({
+    mobile: true,
+    tablet: true,
+    fullscreenable: false,
+      btns: ['viewHTML',
+        '|', 'formatting',
+        '|', 'btnGrp-design',
+        '|', 'link',
+        '|', 'btnGrp-justify',
+        '|', 'btnGrp-lists']
+    }
+  );
+</script>
 </body>
 </html>

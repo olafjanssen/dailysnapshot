@@ -50,8 +50,9 @@ $().ready(function () {
   var uploadForm = document.getElementById('text-upload-form');
   if (uploadForm) {
     document.getElementById('text-upload-form').addEventListener('submit', function (e) {
+      e.preventDefault();
       window.location = '#!';
-      var formData = {submission: document.getElementById('submission-text').value};
+      var formData = {submission: document.getElementById('submission-text').innerHTML};
 
       $.ajax({
         url: 'textsubmission.php',  //Server script to process data
@@ -68,7 +69,7 @@ $().ready(function () {
           document.body.classList.add('uploading');
         },
         success: function () {
-          uploadForm.reset();
+          document.getElementById('submission-text').innerHTML = "";
           // show new results
           document.body.classList.remove('uploading');
           toastr.success('Text upload completed!');
