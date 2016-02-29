@@ -121,6 +121,11 @@ if (!State::refreshToken()) {
       firstOption.innerHTML = 'Show all';
       selectElement.appendChild(firstOption);
 
+      // sort the user names
+      submissions.sort(function(a,b){
+        return a.user.sortable_name.localeCompare(b.user.sortable_name);
+      })
+
       submissions.forEach(function (submission) {
         students.push(submission.user);
         var option = document.createElement('option');
