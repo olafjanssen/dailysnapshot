@@ -123,9 +123,9 @@ if (!State::refreshToken()) {
       selectElement.appendChild(firstOption);
 
       // sort the user names
-      submissions.sort(function(a,b){
+      submissions.sort(function (a, b) {
         return a.user.sortable_name.localeCompare(b.user.sortable_name);
-      })
+      });
 
       submissions.forEach(function (submission) {
         students.push(submission.user);
@@ -365,7 +365,7 @@ if (!State::refreshToken()) {
             article.appendChild(metaheader);
 
             var paragraph = document.createElement('p');
-            paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g,'<br>')); // replaces links!
+            paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g, '<br>')); // replaces links!
 
             article.classList.add('comment');
             article.appendChild(paragraph);
@@ -409,9 +409,9 @@ if (!State::refreshToken()) {
 <script src="bower_components/trumbowyg/dist/trumbowyg.min.js"></script>
 <script>
   $('#submission-text').trumbowyg({
-    mobile: true,
-    tablet: true,
-    fullscreenable: false,
+      mobile: true,
+      tablet: true,
+      fullscreenable: false,
       btns: ['viewHTML',
         '|', 'formatting',
         '|', 'btnGrp-design',
