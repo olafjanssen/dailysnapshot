@@ -313,7 +313,7 @@ if (!State::refreshToken()) {
                     article.appendChild(icon);
 
                     var anchor = document.createElement('a');
-                    anchor.innerHTML = attachment.filename;
+                    anchor.innerHTML = attachment.display_name;
                     anchor.href = attachment.url;
                     article.classList.add('file');
                     article.appendChild(anchor);
