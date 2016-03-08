@@ -112,8 +112,8 @@ if (!State::refreshToken()) {
 
   function loadSubmissions() {
     $.getJSON("submissions.php", function (resp) {
+      console.log(resp);
       var submissions = resp;
-
       var selectElement = document.getElementById('student-filter');
 
       var students = [];
@@ -366,7 +366,6 @@ if (!State::refreshToken()) {
 
             var paragraph = document.createElement('p');
             paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g, '<br>')); // replaces links!
-
             article.classList.add('comment');
             article.appendChild(paragraph);
             section.appendChild(article);

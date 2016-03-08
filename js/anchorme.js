@@ -265,7 +265,6 @@ anchorme.js = function (str, addattrs) {
   if (str.indexOf("</link>") > -1) str = anchorme.dontbreakHTML(str, "link", "href");
   if (str.indexOf("</input>") > -1) str = anchorme.dontbreakHTML(str, "input", "formaction");
   if (str.indexOf("</source>") > -1) str = anchorme.dontbreakHTML(str, "source", "src");
-
   str = str.split("\n").join(" \n ");
   str = str.split(" (").join(" ( ");
   str = str.split(")").join(" )");
