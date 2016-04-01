@@ -89,7 +89,7 @@ if (!State::courseId() || !State::canvasDomain()) {
           function showNextItem(delay) {
             setTimeout(function () {
               if (showData([articles[Math.floor(Math.random() * articles.length)]])){
-                showNextItem(20000);
+                showNextItem(15000);
               } else {
                 showNextItem(0);
               }
@@ -103,7 +103,6 @@ if (!State::courseId() || !State::canvasDomain()) {
           var attempt = article[0];
           var date = attempt.submitted_at ? attempt.submitted_at : attempt.created_at;
           if (attempt.attachments) {
-            console.log(article);
 
             var img, audio, video, mediaSource, iframe;
             var attachment = attempt.attachments[0];
@@ -130,6 +129,7 @@ if (!State::courseId() || !State::canvasDomain()) {
                 img = document.createElement('div');
                 img.classList.add('image-post');
                 img.style.backgroundImage = 'url(' + attachment.url + ')';
+                console.log(attachment);
                 article.appendChild(img);
                 break;
               case 'audio/aac':
