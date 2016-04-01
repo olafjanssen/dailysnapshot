@@ -230,7 +230,7 @@ anchorme.order = function (str, seperator, addattrs) {
           }
           splitedArray[i] = splitedArray[i] + ">" + sm + "</a>" + pm;
         } else {
-          splitedArray[i] = "<a href='" + url + "'>" + sm + "</a>" + pm;
+          splitedArray[i] = "<a target='_blank' href='" + url + "'>" + sm + "</a>" + pm;
         }
       }
     }

@@ -113,8 +113,6 @@ if (!State::refreshToken()) {
 
   function fetchStudents() {
     $.getJSON("students.php", function(data){
-      console.log('fetching students');
-
       var selectElement = document.getElementById('student-filter');
 
       selectElement.innerHTML = '';
@@ -141,7 +139,6 @@ if (!State::refreshToken()) {
 
   function loadSubmissions() {
     $.getJSON("submissions.php", function (resp) {
-      console.log(resp);
       var submissions = resp;
       var selectElement = document.getElementById('student-filter');
 
@@ -150,6 +147,11 @@ if (!State::refreshToken()) {
           return user.id === id;
         })[0].display_name;
       }
+
+      // sort the user names
+      submissions.sort(function (a, b) {
+        return a.user.sortable_name.localeCompare(b.user.sortable_name);
+      });
 
       selectElement.addEventListener('change', function () {
         var selectedIndex = selectElement.selectedIndex;
@@ -206,6 +208,11 @@ if (!State::refreshToken()) {
             }
             append(attempt);
           }
+
+          // add blank target to all links
+          [].slice.call(section.querySelectorAll('a')).forEach(function(link){
+            link.setAttribute('target','_blank');
+          });
         }
 
         function append(attempt) {
