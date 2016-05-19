@@ -156,6 +156,21 @@ article {
 
 article.comment {
   box-sizing: border-box;
+  border-radius: 1em;
+  padding: 0 2rem;
+}
+
+article.comment .commentauthor {
+  background-color: #aaccff;
+  font-style: italic;
+  width: 120%;
+  margin: 0 -2em;
+  padding: 0.25em;
+  color: #333;
+}
+
+article.textpost {
+  box-sizing: border-box;
   padding: 0 2rem;
 }
 

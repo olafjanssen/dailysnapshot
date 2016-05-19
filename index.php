@@ -166,11 +166,12 @@ if (!State::refreshToken()) {
         var articles = [];
         if (selectedIndex == 0) {
           submissions.forEach(function (submission) {
-            articles = articles.concat(submission.submission_comments).concat(submission.submission_history);
+            articles = articles.concat(submission.submission_history);
           });
           currentUserId = null;
         } else {
           articles = articles.concat(submissions[selectedIndex - 1].submission_comments).concat(submissions[selectedIndex - 1].submission_history);
+          console.log(submissions[selectedIndex - 1]);
           currentUserId = submissions[selectedIndex - 1].user.id;
         }
         showData(articles);
@@ -350,6 +351,12 @@ if (!State::refreshToken()) {
             }
             article.appendChild(metaheader);
 
+            // add author to comment
+            var authorHeader = document.createElement('div');
+            authorHeader.classList.add('commentauthor');
+            authorHeader.innerHTML = attempt.author_name.split(" ")[0] + ' says:';
+            article.appendChild(authorHeader);
+
             var paragraph = document.createElement('p');
             paragraph.innerHTML = anchorme.js(attempt.comment); // replaces links!
 
@@ -376,7 +383,7 @@ if (!State::refreshToken()) {
 
             var paragraph = document.createElement('p');
             paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g, '<br>')); // replaces links!
-            article.classList.add('comment');
+            article.classList.add('textpost');
             article.appendChild(paragraph);
             section.appendChild(article);
           }
