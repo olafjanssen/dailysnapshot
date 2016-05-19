@@ -25,6 +25,7 @@ body > header {
 
 #upload-form {
   text-align: center;
+  display: none;
 }
 
 #text-upload-wrapper,
@@ -271,6 +272,20 @@ h4 {
   margin-left: 1em;
 }
 
+#comment-upload-form {
+  text-align: right;
+  margin-bottom: 1em;
+}
+
+#comment-upload-form *:first-child {
+  text-align: left;
+}
+
+#comment-submit {
+  margin: 0.5em;
+}
+
+#comment-submit,
 #text-submit {
   background-color: lightgreen;
   text-decoration: none;
@@ -281,6 +296,7 @@ h4 {
   border: none;
 }
 
+#comment-submit:active,
 #text-submit:active {
   background-color: darkgreen;
   color: lightgreen;
@@ -299,4 +315,21 @@ h4 {
 
 #text-upload-form {
   text-align: right;
+}
+
+
+/* comment input box style overrides */
+#comment-upload-form {
+  background: white;
+}
+
+#comment-upload-form .trumbowyg-box {
+  width: 100%;
+  margin: 0;
+}
+
+#comment-upload-form .trumbowyg-box,
+#comment-upload-form .trumbowyg-box textarea,
+#comment-upload-form .trumbowyg-box #comment-text {
+  min-height: 100px;
 }

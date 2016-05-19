@@ -62,7 +62,7 @@ if (!State::refreshToken()) {
   <h2>You've moved mountains today!</h2>
 </header>
 
-<form enctype="multipart/form-data" id="upload-form">
+<form enctype="multipart/form-data" id="upload-form" style="display: block;">
   <div id="file-upload-wrapper">
     <i class="fa fa-upload"></i>
     <span>media</span>

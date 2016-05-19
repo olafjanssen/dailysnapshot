@@ -122,7 +122,9 @@ if (!State::refreshToken()) {
     $.getJSON("submissions.php", function (resp) {
       console.log(resp);
       var submissions = resp;
-      var selectElement = document.getElementById('student-filter');
+      var selectElement = document.getElementById('student-filter'),
+        commentElement = document.getElementById('comment-box'),
+        uploadForm = document.getElementById('upload-form');
 
       var students = [];
       selectElement.innerHTML = '';
@@ -153,12 +155,17 @@ if (!State::refreshToken()) {
         showSubmissionIndex(selectedIndex);
       });
 
+      // this is a not-so-nice test to see if the user is a student or a teacher
       if (submissions.length == 1) {
         showSubmissionIndex(1);
         selectElement.selectedIndex = 1;
         selectElement.setAttribute('disabled', 'true');
         selectElement.parentNode.setAttribute('disabled', 'true');
+
+        uploadForm.style.display = 'block';
       } else {
+        // teachers cannot upload (sad if you're a teacher AND a student TODO)
+        uploadForm.style.display = 'none';
         showSubmissionIndex(0);
       }
 
@@ -169,10 +176,14 @@ if (!State::refreshToken()) {
             articles = articles.concat(submission.submission_history);
           });
           currentUserId = null;
+
+          commentElement.style.display = 'none';
         } else {
           articles = articles.concat(submissions[selectedIndex - 1].submission_comments).concat(submissions[selectedIndex - 1].submission_history);
           console.log(submissions[selectedIndex - 1]);
           currentUserId = submissions[selectedIndex - 1].user.id;
+
+          commentElement.style.display = 'block';
         }
         showData(articles);
       }
@@ -441,6 +452,7 @@ if (!State::refreshToken()) {
       mobile: true,
       tablet: true,
       fullscreenable: false,
+      autogrow: true,
       btns: ['viewHTML',
         '|', 'formatting',
         '|', 'btnGrp-design',
