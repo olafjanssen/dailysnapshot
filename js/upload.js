@@ -1,3 +1,5 @@
+console.log('loaded');
+
 $().ready(function () {
   $(':file').change(function () {
     var file = this.files[0];
@@ -47,6 +49,8 @@ $().ready(function () {
     }
   }
 
+  console.log('upload.js loading');
+
   var uploadForm = document.getElementById('text-upload-form');
   if (uploadForm) {
     document.getElementById('text-upload-form').addEventListener('submit', function (e) {
@@ -73,6 +77,49 @@ $().ready(function () {
           // show new results
           document.body.classList.remove('uploading');
           toastr.success('Text upload completed!');
+          // reload submissions if function exists
+          if (window.hasOwnProperty('loadSubmissions')) {
+            loadSubmissions();
+          }
+        },
+        error: function () {
+          document.body.classList.remove('uploading');
+          toastr.error('Upload error:', e);
+        },
+        // Form data
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false
+      });
+    });
+  }
+
+  var commentForm = document.getElementById('comment-upload-form');
+  console.log('comment form', commentForm);
+  if (commentForm) {
+    document.getElementById('comment-upload-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var formData = {submission: document.getElementById('comment-text').innerHTML, user: currentUserId};
+      console.log(formData);
+      $.ajax({
+        url: 'comment.php',  //Server script to process data
+        type: 'POST',
+        xhr: function () {  // Custom XMLHttpRequest
+          var myXhr = $.ajaxSettings.xhr();
+          if (myXhr.upload) { // Check if upload property exists
+            myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // For handling the progress of the upload
+          }
+          return myXhr;
+        },
+        //Ajax events
+        beforeSend: function () {
+          document.body.classList.add('uploading');
+        },
+        success: function () {
+          document.getElementById('comment-text').innerHTML = "";
+          // show new results
+          document.body.classList.remove('uploading');
+          toastr.success('Comment posted!');
           // reload submissions if function exists
           if (window.hasOwnProperty('loadSubmissions')) {
             loadSubmissions();

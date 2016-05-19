@@ -99,6 +99,13 @@ if (!State::refreshToken()) {
      data-dismiss="modal">?</a>
 </section>
 
+<section id="comment-box" style="display: none;" class="container">
+  <form id="comment-upload-form">
+    <div id="comment-text" placeholder="Type your comment here." ></div>
+    <button type="submit" id="comment-submit">post</button>
+  </form>
+</section>
+
 <section id="student-blog" class="container">
   <div class="pong-loader">
     Loading…
@@ -108,7 +115,8 @@ if (!State::refreshToken()) {
   // write the upload link
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
-  var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
+  var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>',
+    currentUserId = null;
 
   function loadSubmissions() {
     $.getJSON("submissions.php", function (resp) {
@@ -160,8 +168,10 @@ if (!State::refreshToken()) {
           submissions.forEach(function (submission) {
             articles = articles.concat(submission.submission_comments).concat(submission.submission_history);
           });
+          currentUserId = null;
         } else {
           articles = articles.concat(submissions[selectedIndex - 1].submission_comments).concat(submissions[selectedIndex - 1].submission_history);
+          currentUserId = submissions[selectedIndex - 1].user.id;
         }
         showData(articles);
       }
@@ -419,6 +429,20 @@ if (!State::refreshToken()) {
         '|', 'btnGrp-lists']
     }
   );
+
+  $('#comment-text').trumbowyg({
+      mobile: true,
+      tablet: true,
+      fullscreenable: false,
+      btns: ['viewHTML',
+        '|', 'formatting',
+        '|', 'btnGrp-design',
+        '|', 'link',
+        '|', 'btnGrp-justify',
+        '|', 'btnGrp-lists']
+    }
+  );
+
 </script>
 </body>
 </html>

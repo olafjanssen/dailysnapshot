@@ -280,7 +280,7 @@ function uploadSubmissionData($url, $params, $fileData) {
 function submitAssignmentComment($courseId, $assignmentId, $userId, $text) {
   $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/" .$userId;
   $assignmentParams = "comment[text_comment]=" . urlencode($text);
-  $response = curlPost($apiURL, $assignmentParams);
+  $response = curlPut($apiURL, $assignmentParams);
   return $response;
 }
 
