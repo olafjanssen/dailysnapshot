@@ -109,49 +109,36 @@ if (!State::refreshToken()) {
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>';
-  var students = [];
 
-  function fetchStudents() {
-    $.getJSON("students.php", function(data){
+  function loadSubmissions() {
+    $.getJSON("submissions.php", function (resp) {
+      console.log(resp);
+      var submissions = resp;
       var selectElement = document.getElementById('student-filter');
 
+      var students = [];
       selectElement.innerHTML = '';
       var firstOption = document.createElement('option');
       firstOption.innerHTML = 'Show all';
       selectElement.appendChild(firstOption);
 
       // sort the user names
-      data.sort(function (a, b) {
-        return a.display_name.localeCompare(b.display_name);
+      submissions.sort(function (a, b) {
+        return a.user.sortable_name.localeCompare(b.user.sortable_name);
       });
 
-      data.forEach(function (student) {
-        students.push(student);
+      submissions.forEach(function (submission) {
+        students.push(submission.user);
         var option = document.createElement('option');
-        option.innerHTML = student.display_name;
+        option.innerHTML = submission.user['sortable_name'];
         selectElement.appendChild(option);
       });
-
-    });
-  }
-
-  fetchStudents();
-
-  function loadSubmissions() {
-    $.getJSON("submissions.php", function (resp) {
-      var submissions = resp;
-      var selectElement = document.getElementById('student-filter');
 
       function getStudentNameForId(id) {
         return students.filter(function (user) {
           return user.id === id;
-        })[0].display_name;
+        })[0].sortable_name;
       }
-
-      // sort the user names
-      submissions.sort(function (a, b) {
-        return a.user.sortable_name.localeCompare(b.user.sortable_name);
-      });
 
       selectElement.addEventListener('change', function () {
         var selectedIndex = selectElement.selectedIndex;
@@ -208,11 +195,6 @@ if (!State::refreshToken()) {
             }
             append(attempt);
           }
-
-          // add blank target to all links
-          [].slice.call(section.querySelectorAll('a')).forEach(function(link){
-            link.setAttribute('target','_blank');
-          });
         }
 
         function append(attempt) {

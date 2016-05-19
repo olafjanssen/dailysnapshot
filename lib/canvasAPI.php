@@ -277,6 +277,12 @@ function uploadSubmissionData($url, $params, $fileData) {
   return json_decode($response, true);
 }
 
+function submitAssignmentComment($courseId, $assignmentId, $userId, $text) {
+  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/" .$userId;
+  $assignmentParams = "comment[text_comment]=" . urlencode($text);
+  $response = curlPost($apiURL, $assignmentParams);
+  return $response;
+}
 
 function updateAssignmentDates($courseID, $assignmentID, $dueDate, $unlockDate, $lockDate) {
   $apiURL = "courses/" . $courseID . "/assignments/" . $assignmentID;
