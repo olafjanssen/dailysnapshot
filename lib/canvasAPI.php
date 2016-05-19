@@ -328,6 +328,13 @@ function listGradableStudents($courseID, $assignmentID) {
   return $response;
 }
 
+function listCourseStudents($courseID) {
+  $apiUrl = "courses/" . $courseID . "/users";
+  $response = curlGet($apiUrl);
+  return $response;
+}
+
+
 function listModules($courseID) {
   $apiUrl = "courses/" . $courseID . "/modules/";
   $response = curlGet($apiUrl);

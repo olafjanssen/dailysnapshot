@@ -101,7 +101,7 @@ if (!State::refreshToken()) {
 
 <section id="comment-box" style="display: none;" class="container">
   <form id="comment-upload-form">
-    <div id="comment-text" placeholder="Type your comment here." ></div>
+    <div id="comment-text" placeholder="Type your comment here."></div>
     <button type="submit" id="comment-submit">post</button>
   </form>
 </section>
@@ -116,7 +116,307 @@ if (!State::refreshToken()) {
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>',
-    currentUserId = null;
+    currentUserId = null,
+    students = null;
+
+  function getStudentNameForId(id) {
+    return students.filter(function (user) {
+      return user.id === id;
+    })[0].sortable_name;
+  }
+
+  function loadStudents() {
+    $.getJSON("students.php", function (resp) {
+      console.log(resp);
+
+      students = resp;
+
+      var selectElement = document.getElementById('student-filter'),
+        commentElement = document.getElementById('comment-box'),
+        uploadForm = document.getElementById('upload-form');
+
+      selectElement.innerHTML = '';
+      var firstOption = document.createElement('option');
+      firstOption.innerHTML = 'Show all';
+      selectElement.appendChild(firstOption);
+
+      // sort the user names
+      students.sort(function (a, b) {
+        return a.sortable_name.localeCompare(b.sortable_name);
+      });
+
+      students.forEach(function (student) {
+        var option = document.createElement('option');
+        option.innerHTML = student.sortable_name;
+        selectElement.appendChild(option);
+      });
+
+      selectElement.addEventListener('change', function () {
+        var selectedIndex = selectElement.selectedIndex;
+        if (selectedIndex===0){
+          loadSubmissions();
+        } else {
+          loadSubmission(selectedIndex);
+        }
+      });
+
+      selectElement.selectedIndex = 1;
+      loadSubmission(1);
+
+      // this is a not-so-nice test to see if the user is a student or a teacher
+      if (students.length == 1) {
+        selectElement.setAttribute('disabled', 'true');
+        selectElement.parentNode.setAttribute('disabled', 'true');
+        uploadForm.style.display = 'block';
+      } else {
+        // teachers cannot upload (sad if you're a teacher AND a student TODO)
+        uploadForm.style.display = 'none';
+      }
+
+    });
+  }
+
+
+  function loadSubmission(index) {
+    currentUserId = students[index - 1].id;
+    console.log('getting ' + currentUserId);
+    $.get("singlesubmission.php", {user: currentUserId}, function (resp) {
+      var submission = resp; console.log(submission);
+
+      var commentElement = document.getElementById('comment-box');
+
+      var articles = [].concat(submission[0].submission_comments).concat(submission[0].submission_history);
+      if (students.length > 1) {
+        commentElement.style.display = 'block';
+      }
+      showData(articles);
+
+      function showData(articles) {
+        var section = document.getElementById('student-blog');
+        section.innerHTML = '';
+        console.log(articles);
+        // filter out submissions that are not comments, text entries, or attached files (should not occur in practice)
+        articles = articles.filter(function (article) {
+          return article.comment || article.body || article.attachments;
+        });
+
+        articles.sort(function (a, b) {
+          // sort by submission date and let attachments go before comments (new to old)
+          var aa = a.submitted_at ? new Date(a.submitted_at) : new Date(new Date(a.created_at).valueOf() - 20000),
+            bb = b.submitted_at ? new Date(b.submitted_at) : new Date(new Date(b.created_at).valueOf() - 20000);
+          return bb - aa;
+        });
+
+        var dateString = '';
+
+        var hiddenArticles = articles;
+        appendFrom(hiddenArticles, 10);
+
+        function appendFrom(attempts, pageLength) {
+          for (var i = 0; i < pageLength; i++) {
+            var attempt = attempts.shift();
+            if (!attempt) {
+              break;
+            }
+            append(attempt);
+          }
+        }
+
+        function append(attempt) {
+          var date = attempt.submitted_at ? attempt.submitted_at : attempt.created_at;
+          var newDateString = moment(date).format('dddd, MMMM Do');
+          if (newDateString !== dateString) {
+            dateString = newDateString;
+            var header = document.createElement('h4');
+            var dateHeader = document.createElement('time');
+            dateHeader.setAttribute('datetime', date);
+            dateHeader.innerHTML = dateString;
+            header.appendChild(dateHeader);
+            section.appendChild(header);
+          }
+
+          if (attempt.attachments) {
+            var img, audio, video, mediaSource, iframe;
+            attempt.attachments.forEach(function (attachment) {
+                var article = document.createElement('article');
+                article.classList.add('row');
+
+                // add metaheader
+                var metaheader = document.createElement('header');
+                var time = document.createElement('time');
+                time.innerHTML = moment(date).format('LT');
+                metaheader.appendChild(time);
+                if (currentUserId) {
+                  var author = document.createElement('span');
+                  author.classList.add('row-author');
+                  author.innerHTML = getStudentNameForId(attempt.user_id);
+                  metaheader.appendChild(author);
+                }
+                article.appendChild(metaheader);
+
+                var contentType = attachment['content-type'];
+                switch (contentType) {
+                  case 'image/gif':
+                  case 'image/png':
+                  case 'image/jpeg':
+                  case 'image/jpg':
+                    img = document.createElement('img');
+                    img.src = attachment.url;
+                    img.classList.add('blog-image');
+                    article.appendChild(img);
+                    break;
+                  case 'audio/aac':
+                  case 'audio/mp4':
+                  case 'audio/mpeg':
+                  case 'audio/ogg':
+                  case 'audio/wav':
+                  case 'audio/webm':
+                    audio = document.createElement('audio');
+                    audio.setAttribute('controls', 'true');
+                    audio.src = attachment.url;
+                    audio.classList.add('blog-image');
+                    mediaSource = document.createElement('source');
+                    mediaSource.setAttribute('src', attachment.url);
+                    mediaSource.setAttribute('type', contentType);
+                    audio.appendChild(mediaSource);
+                    article.appendChild(audio);
+                    break;
+                  case 'video/quicktime':
+                  case 'video/mp4':
+                  case 'video/ogg':
+                  case 'video/webm':
+                    video = document.createElement('video');
+                    video.setAttribute('controls', 'true');
+                    video.src = attachment.url;
+                    video.classList.add('blog-image');
+                    mediaSource = document.createElement('source');
+                    mediaSource.setAttribute('src', attachment.url);
+                    mediaSource.setAttribute('type', contentType);
+                    video.appendChild(mediaSource);
+                    article.appendChild(video);
+                    break;
+                  case 'application/pdf':
+                  case 'application/msword':
+                  case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                  case 'application/vnd.ms-powerpoint':
+                  case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                  case 'application/vnd.ms-excel':
+                  case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                  case 'text/plain':
+                  case 'application/x-python':
+                  case 'text/x-python':
+                  case 'text/javascript':
+                  case 'application/x-javascript':
+                  case 'text/xml':
+                  case 'application/xml':
+                  case 'text/css':
+                  case 'text/x-markdown':
+                  case 'text/x-script.perl':
+                  case 'text/x-c':
+                  case 'text/x-m':
+                  case 'application/json':
+                    if (window.self !== window.top) {
+                      iframe = document.createElement('iframe');
+                      iframe.setAttribute('src', canvasDomain + attachment.preview_url);
+                      iframe.classList.add('blog-embed');
+                      article.appendChild(iframe);
+                      break;
+                    }
+                  default:
+                    console.log('unknown mime:', contentType, attachment);
+                    var icon = document.createElement('i');
+                    icon.setAttribute('class', 'fa fa-2x file-icon');
+                    switch (contentType) {
+                      case 'application/zip':
+                      case 'application/x-rar-compressed':
+                        icon.classList.add('fa-file-zip-o');
+                        break;
+                      default:
+                        icon.classList.add('fa-file-image-o');
+                        break;
+                    }
+                    article.appendChild(icon);
+
+                    var anchor = document.createElement('a');
+                    anchor.innerHTML = attachment.display_name;
+                    anchor.href = attachment.url;
+                    article.classList.add('file');
+                    article.appendChild(anchor);
+                    break;
+                }
+                section.appendChild(article);
+              }
+            );
+          }
+          if (attempt.comment) {
+            var article = document.createElement('article');
+            article.classList.add('row');
+
+            // add metaheader TODO REMOVE CODE DUPLICATE except for author id
+            var metaheader = document.createElement('header');
+            var time = document.createElement('time');
+            time.innerHTML = moment(date).format('LT');
+            metaheader.appendChild(time);
+            if (selectElement.selectedIndex === 0) {
+              var author = document.createElement('span');
+              author.classList.add('row-author');
+              author.innerHTML = getStudentNameForId(attempt.author_id);
+              metaheader.appendChild(author);
+            }
+            article.appendChild(metaheader);
+
+            // add author to comment
+            var authorHeader = document.createElement('div');
+            authorHeader.classList.add('commentauthor');
+            authorHeader.innerHTML = attempt.author_name.split(" ")[0] + ' says:';
+            article.appendChild(authorHeader);
+
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = anchorme.js(attempt.comment); // replaces links!
+
+            article.classList.add('comment');
+            article.appendChild(paragraph);
+            section.appendChild(article);
+          }
+          if (attempt.body) {
+            var article = document.createElement('article');
+            article.classList.add('row');
+
+            // add metaheader TODO REMOVE CODE DUPLICATE except for author id
+            var metaheader = document.createElement('header');
+            var time = document.createElement('time');
+            time.innerHTML = moment(date).format('LT');
+            metaheader.appendChild(time);
+            if (selectElement.selectedIndex === 0) {
+              var author = document.createElement('span');
+              author.classList.add('row-author');
+              author.innerHTML = getStudentNameForId(attempt.user_id);
+              metaheader.appendChild(author);
+            }
+            article.appendChild(metaheader);
+
+            var paragraph = document.createElement('p');
+            paragraph.innerHTML = anchorme.js(attempt.body.replace(/\n/g, '<br>')); // replaces links!
+            article.classList.add('textpost');
+            article.appendChild(paragraph);
+            section.appendChild(article);
+          }
+        }
+
+        window.onscroll = respondToScroll;
+
+        function respondToScroll() {
+          if (window.scrollY + 1.5 * window.innerHeight - document.body.clientHeight > 0) {
+            appendFrom(hiddenArticles, 10);
+          }
+        }
+
+        document.body.appendChild(section);
+      }
+    })
+    ;
+  }
+
 
   function loadSubmissions() {
     $.getJSON("submissions.php", function (resp) {
@@ -126,34 +426,34 @@ if (!State::refreshToken()) {
         commentElement = document.getElementById('comment-box'),
         uploadForm = document.getElementById('upload-form');
 
-      var students = [];
-      selectElement.innerHTML = '';
-      var firstOption = document.createElement('option');
-      firstOption.innerHTML = 'Show all';
-      selectElement.appendChild(firstOption);
+//      var students = [];
+//      selectElement.innerHTML = '';
+//      var firstOption = document.createElement('option');
+//      firstOption.innerHTML = 'Show all';
+//      selectElement.appendChild(firstOption);
 
       // sort the user names
       submissions.sort(function (a, b) {
         return a.user.sortable_name.localeCompare(b.user.sortable_name);
       });
 
-      submissions.forEach(function (submission) {
-        students.push(submission.user);
-        var option = document.createElement('option');
-        option.innerHTML = submission.user['sortable_name'];
-        selectElement.appendChild(option);
-      });
+//      submissions.forEach(function (submission) {
+//        students.push(submission.user);
+//        var option = document.createElement('option');
+//        option.innerHTML = submission.user['sortable_name'];
+//        selectElement.appendChild(option);
+//      });
 
-      function getStudentNameForId(id) {
-        return students.filter(function (user) {
-          return user.id === id;
-        })[0].sortable_name;
-      }
+//      function getStudentNameForId(id) {
+//        return students.filter(function (user) {
+//          return user.id === id;
+//        })[0].sortable_name;
+//      }
 
-      selectElement.addEventListener('change', function () {
-        var selectedIndex = selectElement.selectedIndex;
-        showSubmissionIndex(selectedIndex);
-      });
+//      selectElement.addEventListener('change', function () {
+//        var selectedIndex = selectElement.selectedIndex;
+//        showSubmissionIndex(selectedIndex);
+//      });
 
       // this is a not-so-nice test to see if the user is a student or a teacher
       if (submissions.length == 1) {
@@ -415,7 +715,7 @@ if (!State::refreshToken()) {
   }
 
   $(function () {
-    loadSubmissions();
+    loadStudents();
   });
 </script>
 
