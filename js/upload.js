@@ -26,8 +26,8 @@ $().ready(function () {
         // show new results
         document.body.classList.remove('uploading');
         toastr.success('Upload completed!');
-        if (window.hasOwnProperty('loadSubmissions')) {
-          loadSubmissions();
+        if (window.hasOwnProperty('loadSubmission')) {
+          loadSubmission(currentUserId);
         }
       },
       error: function () {
@@ -78,8 +78,8 @@ $().ready(function () {
           document.body.classList.remove('uploading');
           toastr.success('Text upload completed!');
           // reload submissions if function exists
-          if (window.hasOwnProperty('loadSubmissions')) {
-            loadSubmissions();
+          if (window.hasOwnProperty('loadSubmission')) {
+            loadSubmission(currentUserId);
           }
         },
         error: function () {
@@ -121,8 +121,8 @@ $().ready(function () {
           document.body.classList.remove('uploading');
           toastr.success('Comment posted!');
           // reload submissions if function exists
-          if (window.hasOwnProperty('loadSubmissions')) {
-            loadSubmissions();
+          if (window.hasOwnProperty('loadSubmission')) {
+            loadSubmission(currentUserId);
           }
         },
         error: function () {

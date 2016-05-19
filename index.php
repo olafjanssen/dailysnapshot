@@ -156,12 +156,12 @@ if (!State::refreshToken()) {
         if (selectedIndex===0){
           loadSubmissions();
         } else {
-          loadSubmission(selectedIndex);
+          loadSubmission(students[selectedIndex - 1].id);
         }
       });
 
       selectElement.selectedIndex = 1;
-      loadSubmission(1);
+      loadSubmission(students[0].id);
 
       // this is a not-so-nice test to see if the user is a student or a teacher
       if (students.length == 1) {
@@ -177,15 +177,18 @@ if (!State::refreshToken()) {
   }
 
 
-  function loadSubmission(index) {
-    currentUserId = students[index - 1].id;
+  function loadSubmission(id) {
+    currentUserId = id;
     console.log('getting ' + currentUserId);
     $.get("singlesubmission.php", {user: currentUserId}, function (resp) {
       var submission = resp; console.log(submission);
 
       var commentElement = document.getElementById('comment-box');
 
-      var articles = [].concat(submission[0].submission_comments).concat(submission[0].submission_history);
+      var articles = [];
+      if (submission[0]) {
+        articles = articles.concat(submission[0].submission_comments).concat(submission[0].submission_history);
+      }
       if (students.length > 1) {
         commentElement.style.display = 'block';
       }
@@ -246,7 +249,7 @@ if (!State::refreshToken()) {
                 var time = document.createElement('time');
                 time.innerHTML = moment(date).format('LT');
                 metaheader.appendChild(time);
-                if (currentUserId) {
+                if (!currentUserId) {
                   var author = document.createElement('span');
                   author.classList.add('row-author');
                   author.innerHTML = getStudentNameForId(attempt.user_id);
@@ -357,7 +360,7 @@ if (!State::refreshToken()) {
             var time = document.createElement('time');
             time.innerHTML = moment(date).format('LT');
             metaheader.appendChild(time);
-            if (selectElement.selectedIndex === 0) {
+            if (!currentUserId) {
               var author = document.createElement('span');
               author.classList.add('row-author');
               author.innerHTML = getStudentNameForId(attempt.author_id);
@@ -387,7 +390,7 @@ if (!State::refreshToken()) {
             var time = document.createElement('time');
             time.innerHTML = moment(date).format('LT');
             metaheader.appendChild(time);
-            if (selectElement.selectedIndex === 0) {
+            if (!currentUserId) {
               var author = document.createElement('span');
               author.classList.add('row-author');
               author.innerHTML = getStudentNameForId(attempt.user_id);
@@ -419,6 +422,7 @@ if (!State::refreshToken()) {
 
 
   function loadSubmissions() {
+    currentUserId = null;
     $.getJSON("submissions.php", function (resp) {
       console.log(resp);
       var submissions = resp;
@@ -456,18 +460,18 @@ if (!State::refreshToken()) {
 //      });
 
       // this is a not-so-nice test to see if the user is a student or a teacher
-      if (submissions.length == 1) {
-        showSubmissionIndex(1);
-        selectElement.selectedIndex = 1;
-        selectElement.setAttribute('disabled', 'true');
-        selectElement.parentNode.setAttribute('disabled', 'true');
-
-        uploadForm.style.display = 'block';
-      } else {
+//      if (submissions.length == 1) {
+//        showSubmissionIndex(1);
+//        selectElement.selectedIndex = 1;
+//        selectElement.setAttribute('disabled', 'true');
+//        selectElement.parentNode.setAttribute('disabled', 'true');
+//
+//        uploadForm.style.display = 'block';
+//      } else {
         // teachers cannot upload (sad if you're a teacher AND a student TODO)
         uploadForm.style.display = 'none';
         showSubmissionIndex(0);
-      }
+//      }
 
       function showSubmissionIndex(selectedIndex) {
         var articles = [];
@@ -543,7 +547,7 @@ if (!State::refreshToken()) {
                 var time = document.createElement('time');
                 time.innerHTML = moment(date).format('LT');
                 metaheader.appendChild(time);
-                if (selectElement.selectedIndex === 0) {
+                if (!currentUserId) {
                   var author = document.createElement('span');
                   author.classList.add('row-author');
                   author.innerHTML = getStudentNameForId(attempt.user_id);
@@ -654,7 +658,7 @@ if (!State::refreshToken()) {
             var time = document.createElement('time');
             time.innerHTML = moment(date).format('LT');
             metaheader.appendChild(time);
-            if (selectElement.selectedIndex === 0) {
+            if (!currentUserId) {
               var author = document.createElement('span');
               author.classList.add('row-author');
               author.innerHTML = getStudentNameForId(attempt.author_id);
@@ -684,7 +688,7 @@ if (!State::refreshToken()) {
             var time = document.createElement('time');
             time.innerHTML = moment(date).format('LT');
             metaheader.appendChild(time);
-            if (selectElement.selectedIndex === 0) {
+            if (!currentUserId) {
               var author = document.createElement('span');
               author.classList.add('row-author');
               author.innerHTML = getStudentNameForId(attempt.user_id);
@@ -749,8 +753,8 @@ if (!State::refreshToken()) {
   );
 
   $('#comment-text').trumbowyg({
-      mobile: true,
-      tablet: true,
+//      mobile: true,
+//      tablet: true,
       fullscreenable: false,
       autogrow: true,
       btns: ['viewHTML',
