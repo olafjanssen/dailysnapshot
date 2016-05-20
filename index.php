@@ -116,6 +116,7 @@ if (!State::refreshToken()) {
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
   var canvasDomain = 'https://<?php echo State::canvasDomain(); ?>',
+    storeId = '<?php echo base64_encode(State::courseId() . ',' . State::assignmentId() . ',' . State::canvasDomain()); ?>',
     currentUserId = null,
     students = null;
 
@@ -126,10 +127,16 @@ if (!State::refreshToken()) {
   }
 
   function loadStudents() {
-    $.getJSON("students.php", function (resp) {
-      console.log(resp);
+    students = JSON.parse(localStorage.getItem(storeId + '/students'));
+    if (students) {
+      handleStudents(students);
+    }
 
+    $.getJSON("students.php", handleStudents);
+
+    function handleStudents(resp) {
       students = resp;
+      localStorage.setItem(storeId + '/students', JSON.stringify(students));
 
       var selectElement = document.getElementById('student-filter'),
         commentElement = document.getElementById('comment-box'),
@@ -153,7 +160,7 @@ if (!State::refreshToken()) {
 
       selectElement.addEventListener('change', function () {
         var selectedIndex = selectElement.selectedIndex;
-        if (selectedIndex===0){
+        if (selectedIndex === 0) {
           loadSubmissions();
         } else {
           loadSubmission(students[selectedIndex - 1].id);
@@ -172,16 +179,24 @@ if (!State::refreshToken()) {
         // teachers cannot upload (sad if you're a teacher AND a student TODO)
         uploadForm.style.display = 'none';
       }
-
-    });
+    }
   }
-
 
   function loadSubmission(id) {
     currentUserId = id;
     console.log('getting ' + currentUserId);
-    $.get("singlesubmission.php", {user: currentUserId}, function (resp) {
+
+    var submission = JSON.parse(localStorage.getItem(storeId + '/submission/'+currentUserId));
+    if (submission) {
+      handleSubmission(submission);
+    }
+
+    $.get("singlesubmission.php", {user: currentUserId},
+      handleSubmission);
+
+    function handleSubmission(resp) {
       var submission = resp; console.log(submission);
+      localStorage.setItem(storeId + '/submission/'+currentUserId, JSON.stringify(submission));
 
       var commentElement = document.getElementById('comment-box');
 
@@ -416,8 +431,7 @@ if (!State::refreshToken()) {
 
         document.body.appendChild(section);
       }
-    })
-    ;
+    }
   }
 
 
@@ -430,48 +444,14 @@ if (!State::refreshToken()) {
         commentElement = document.getElementById('comment-box'),
         uploadForm = document.getElementById('upload-form');
 
-//      var students = [];
-//      selectElement.innerHTML = '';
-//      var firstOption = document.createElement('option');
-//      firstOption.innerHTML = 'Show all';
-//      selectElement.appendChild(firstOption);
-
       // sort the user names
       submissions.sort(function (a, b) {
         return a.user.sortable_name.localeCompare(b.user.sortable_name);
       });
 
-//      submissions.forEach(function (submission) {
-//        students.push(submission.user);
-//        var option = document.createElement('option');
-//        option.innerHTML = submission.user['sortable_name'];
-//        selectElement.appendChild(option);
-//      });
-
-//      function getStudentNameForId(id) {
-//        return students.filter(function (user) {
-//          return user.id === id;
-//        })[0].sortable_name;
-//      }
-
-//      selectElement.addEventListener('change', function () {
-//        var selectedIndex = selectElement.selectedIndex;
-//        showSubmissionIndex(selectedIndex);
-//      });
-
-      // this is a not-so-nice test to see if the user is a student or a teacher
-//      if (submissions.length == 1) {
-//        showSubmissionIndex(1);
-//        selectElement.selectedIndex = 1;
-//        selectElement.setAttribute('disabled', 'true');
-//        selectElement.parentNode.setAttribute('disabled', 'true');
-//
-//        uploadForm.style.display = 'block';
-//      } else {
-        // teachers cannot upload (sad if you're a teacher AND a student TODO)
+      // teachers cannot upload (sad if you're a teacher AND a student TODO)
         uploadForm.style.display = 'none';
         showSubmissionIndex(0);
-//      }
 
       function showSubmissionIndex(selectedIndex) {
         var articles = [];
