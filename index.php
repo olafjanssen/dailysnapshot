@@ -182,6 +182,7 @@ if (!State::refreshToken()) {
     }
   }
 
+  var submissionXhr = null;
   function loadSubmission(id) {
     currentUserId = id;
     console.log('getting ' + currentUserId);
@@ -191,7 +192,11 @@ if (!State::refreshToken()) {
       handleSubmission(submission);
     }
 
-    $.get("singlesubmission.php", {user: currentUserId},
+    // abort previous request
+    if(submissionXhr) {
+      submissionXhr.abort();
+    }
+    submissionXhr = $.get("singlesubmission.php", {user: currentUserId},
       handleSubmission);
 
     function handleSubmission(resp) {
