@@ -63,7 +63,7 @@ if (!State::refreshToken()) {
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
-  <div id="select-wrapper">
+  <div id="select-wrapper" style="display:none;">
     <select id="student-filter" title="Student filter">
       <option>Show all</option>
     </select>
@@ -128,6 +128,7 @@ if (!State::refreshToken()) {
   }
 
   function loadStudents() {
+    console.log('loading students');
     students = JSON.parse(localStorage.getItem(storeId + '/students'));
     if (students) {
       showStudents();
@@ -147,7 +148,9 @@ if (!State::refreshToken()) {
       }
     });
 
+    console.log('fetching students');
     $.getJSON("service/students.php", function (resp) {
+      console.log('students received');
       var cached = localStorage.getItem(storeId + '/students');
       if (!cached) {
         cached = '';
@@ -161,10 +164,12 @@ if (!State::refreshToken()) {
     });
 
     function showStudents() {
+      console.log('showing students', students);
       var selectElement = document.getElementById('student-filter'),
         commentElement = document.getElementById('comment-box'),
         uploadForm = document.getElementById('upload-form');
 
+      selectElement.parentNode.style.display = "block";
       selectElement.innerHTML = '';
       var firstOption = document.createElement('option');
       firstOption.innerHTML = 'Show all';
@@ -200,11 +205,12 @@ if (!State::refreshToken()) {
   }
 
   function loadSubmission(id) {
-    showSubmissions();
     console.log('getting', id);
+    showSubmissions();
 
     $.get("service/singlesubmission.php", {user: id},
       function (resp) {
+        console.log('receieved', id);
         var submission = resp;
         if (submission.length === 1) {
           localStorage.setItem(storeId + '/submission/' + id, JSON.stringify(submission[0]));
@@ -213,7 +219,7 @@ if (!State::refreshToken()) {
       });
 
     function showSubmissions() {
-      console.log('show', currentUserId);
+      console.log('showing', currentUserId);
       var submissions = [];
       if (currentUserId) {
         var submission = JSON.parse(localStorage.getItem(storeId + '/submission/' + currentUserId));
@@ -250,6 +256,7 @@ if (!State::refreshToken()) {
       showData(articles);
 
       function showData(articles) {
+        console.log('showing articles', articles);
         var section = document.getElementById('student-blog');
         section.innerHTML = '';
 

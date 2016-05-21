@@ -313,6 +313,11 @@ function listAssignmentsSubmissionHistory($courseID, $assignmentID, $studentID) 
   return $response;
 }
 
+function listLightAssignmentsSubmissionHistory($courseID, $assignmentID, $studentID) {
+  $response = curlGet("courses/" . $courseID . "/students/submissions?per_page=50&include[]=user&assignment_ids[]=" . $assignmentID . "&student_ids[]=" . $studentID);
+  return $response;
+}
+
 function getPageBody($courseID, $page_url) {
   // Get the response
   $page = getPageFromCourse($courseID, $page_url);

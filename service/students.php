@@ -25,20 +25,13 @@ if (count($daily) > 0) {
   State::setAssignmentId($assignmentId);
 }
 
-$students = listCourseStudents(State::courseId());
-$gradableStudents = listGradableStudents(State::courseId(), State::assignmentId());
+$submissions = listLightAssignmentsSubmissionHistory(State::courseId(),State::assignmentId(),'all');
 
-$filteredStudents = array();
-
-foreach ($gradableStudents as $gradableStudent) {
-  foreach ($students as $student) {
-    if ($student->id === $gradableStudent->id) {
-      $filteredStudents[] = $student;
-      break;
-    }
-  }
+$users = array();
+foreach ($submissions as $submission) {
+  array_push($users, $submission->user );
 }
 
-$json = json_encode($filteredStudents);
+$json = json_encode($users);
 
 echo $json;

@@ -22,14 +22,21 @@ foreach ($gradableStudents as $student) {
 
 $outcomeResults = getOutcomeResults(State::courseId(), $userIds);
 
+$outcomeIds = array();
 foreach ($outcomeResults->outcome_results as $result) {
-  $outcomeId = $result->id;
-  
+  array_push($outcomeIds, $result->links->learning_outcome);
+}
+
+$outcomeIds = array_unique($outcomeIds);
+$outcomes = array();
+foreach ($outcomeIds as $outcomeId){
+  $outcome = getOutcome($outcomeId);
+  array_push($outcomes, $outcome);
 }
 
 
 $outcomeResults->users = $gradableStudents;
-$outcomeGroups->outcome_groups = $outcomeGroups;
+$outcomeResults->outcomes = $outcomes;
 
 echo json_encode($outcomeResults);
 
