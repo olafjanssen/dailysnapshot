@@ -49,13 +49,11 @@ function curlGet($url) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
   $result = curl_exec($ch);
-
   #Parse header information from body response
   $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
   $header = substr($result, 0, $header_size);
   $body = substr($result, $header_size);
   $data = json_decode($body);
-
   curl_close($ch);
 
   #Parse Link Information
@@ -73,8 +71,15 @@ function curlGet($url) {
     // Remove the API url so it is not added again in the get call
     $next_link = str_replace('https://' . State::canvasDomain() . '/api/v1/', '', $links['next']);
     $next_data = curlGet($next_link);
-    $data = array_merge($data, $next_data);
-    return $data;
+    $mergedData = array_merge($data, $next_data);
+
+    // workaround for the outcomes
+    if ($mergedData == NULL) {
+      $mergedData = new stdClass();
+      $mergedData->outcome_results = array_merge($data->outcome_results, $next_data->outcome_results);
+    }
+
+    return $mergedData;
   } else {
     return $data;
   }
@@ -278,7 +283,7 @@ function uploadSubmissionData($url, $params, $fileData) {
 }
 
 function submitAssignmentComment($courseId, $assignmentId, $userId, $text) {
-  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/" .$userId;
+  $apiURL = "courses/" . $courseId . "/assignments/" . $assignmentId . "/submissions/" . $userId;
   $assignmentParams = "comment[text_comment]=" . urlencode($text);
   $response = curlPut($apiURL, $assignmentParams);
   return $response;
@@ -373,6 +378,23 @@ function createOutcomeSubGroup($courseId, $outcomeGroupId, $title, $description)
 
 function getOutcomeGroups($courseId) {
   $apiUrl = "courses/" . $courseId . '/outcome_groups';
+  $response = curlGet($apiUrl);
+  return $response;
+}
+
+function getOutcome($outcomeId) {
+  $apiUrl = "outcomes/" . $outcomeId;
+  $response = curlGet($apiUrl);
+  return $response;
+}
+
+function getOutcomeResults($courseId, $userIds) {
+  $studentParams = '';
+  foreach ($userIds as $userId) {
+    $studentParams .= '&user_ids[]=' . $userId;
+  }
+
+  $apiUrl = 'courses/' . $courseId . '/outcome_results?include[]=outcomes'; //. $studentParams;
   $response = curlGet($apiUrl);
   return $response;
 }

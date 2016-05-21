@@ -111,6 +111,7 @@ if (!State::refreshToken()) {
     Loading…
   </div>
 </section>
+
 <script>
   // write the upload link
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
@@ -200,11 +201,19 @@ if (!State::refreshToken()) {
 
   function loadSubmission(id) {
     showSubmissions();
+    console.log('getting', id);
 
     $.get("service/singlesubmission.php", {user: id},
-      handleSubmission);
+      function (resp) {
+        var submission = resp;
+        if (submission.length === 1) {
+          localStorage.setItem(storeId + '/submission/' + id, JSON.stringify(submission[0]));
+        }
+        showSubmissions();
+      });
 
     function showSubmissions() {
+      console.log('show', currentUserId);
       var submissions = [];
       if (currentUserId) {
         var submission = JSON.parse(localStorage.getItem(storeId + '/submission/' + currentUserId));
@@ -463,14 +472,6 @@ if (!State::refreshToken()) {
         document.body.appendChild(section);
       }
     }
-
-    function handleSubmission(resp) {
-      var submission = resp;
-      if (submission.length === 1) {
-        localStorage.setItem(storeId + '/submission/' + currentUserId, JSON.stringify(submission[0]));
-      }
-      showSubmissions();
-    }
   }
 
   $(function () {
@@ -522,5 +523,6 @@ if (!State::refreshToken()) {
   );
 
 </script>
+
 </body>
 </html>
