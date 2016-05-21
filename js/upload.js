@@ -1,5 +1,3 @@
-console.log('loaded');
-
 $().ready(function () {
   $(':file').change(function () {
     var file = this.files[0];
@@ -49,8 +47,6 @@ $().ready(function () {
     }
   }
 
-  console.log('upload.js loading');
-
   var uploadForm = document.getElementById('text-upload-form');
   if (uploadForm) {
     document.getElementById('text-upload-form').addEventListener('submit', function (e) {
@@ -95,12 +91,10 @@ $().ready(function () {
   }
 
   var commentForm = document.getElementById('comment-upload-form');
-  console.log('comment form', commentForm);
   if (commentForm) {
     document.getElementById('comment-upload-form').addEventListener('submit', function (e) {
       e.preventDefault();
       var formData = {submission: document.getElementById('comment-text').innerHTML, user: currentUserId};
-      console.log(formData);
       $.ajax({
         url: 'comment.php',  //Server script to process data
         type: 'POST',

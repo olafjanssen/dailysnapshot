@@ -129,17 +129,15 @@ if (!State::refreshToken()) {
   function loadStudents() {
     students = JSON.parse(localStorage.getItem(storeId + '/students'));
     if (students) {
-      handleStudents(students);
+      showStudents();
     }
 
     var selectElement = document.getElementById('student-filter');
     selectElement.addEventListener('change', function () {
-      console.log('index changed');
       var selectedIndex = selectElement.selectedIndex;
       if (selectedIndex === 0) {
         currentUserId = null;
         students.forEach(function (student) {
-          console.log(student.id);
           loadSubmission(student.id);
         });
       } else {
@@ -148,12 +146,20 @@ if (!State::refreshToken()) {
       }
     });
 
-    $.getJSON("students.php", handleStudents);
+    $.getJSON("students.php", function (resp) {
+      var cached = localStorage.getItem(storeId + '/students');
+      if (!cached) {
+        cached = '';
+      }
+      localStorage.setItem(storeId + '/students', JSON.stringify(resp));
 
-    function handleStudents(resp) {
-      students = resp;
-      localStorage.setItem(storeId + '/students', JSON.stringify(students));
+      if (cached.localeCompare(JSON.stringify(resp)) != 0) {
+        students = resp;
+        showStudents();
+      }
+    });
 
+    function showStudents() {
       var selectElement = document.getElementById('student-filter'),
         commentElement = document.getElementById('comment-box'),
         uploadForm = document.getElementById('upload-form');
@@ -193,15 +199,12 @@ if (!State::refreshToken()) {
   }
 
   function loadSubmission(id) {
-    console.log('getting ' + id);
-
     showSubmissions();
 
     $.get("singlesubmission.php", {user: id},
       handleSubmission);
 
     function showSubmissions() {
-      console.log('show ' + currentUserId);
       var submissions = [];
       if (currentUserId) {
         var submission = JSON.parse(localStorage.getItem(storeId + '/submission/' + currentUserId));
@@ -217,10 +220,6 @@ if (!State::refreshToken()) {
         });
       }
 
-      if (submissions.length === 0) {
-        return;
-      }
-
       var commentElement = document.getElementById('comment-box');
 
       var articles = [];
@@ -229,7 +228,7 @@ if (!State::refreshToken()) {
           articles = articles.concat(submission.submission_history);
         });
         commentElement.style.display = 'none';
-      } else {
+      } else if (submissions.length > 0) {
         articles = articles.concat(submissions[0].submission_comments).concat(submissions[0].submission_history);
 
         if (students.length > 1) {
@@ -244,7 +243,7 @@ if (!State::refreshToken()) {
       function showData(articles) {
         var section = document.getElementById('student-blog');
         section.innerHTML = '';
-        console.log(articles);
+
         // filter out submissions that are not comments, text entries, or attached files (should not occur in practice)
         articles = articles.filter(function (article) {
           return article.comment || article.body || article.attachments;
@@ -467,14 +466,13 @@ if (!State::refreshToken()) {
 
     function handleSubmission(resp) {
       var submission = resp;
-      console.log(submission);
       if (submission.length === 1) {
         localStorage.setItem(storeId + '/submission/' + currentUserId, JSON.stringify(submission[0]));
       }
       showSubmissions();
     }
   }
-  
+
   $(function () {
     loadStudents();
   });
