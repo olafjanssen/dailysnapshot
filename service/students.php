@@ -6,8 +6,8 @@
  * Time: 20:30
  */
 
-require_once 'lib/state.php';
-require_once 'lib/canvasAPI.php';
+require_once '../lib/state.php';
+require_once '../lib/canvasAPI.php';
 
 header('Content-type: application/json');
 

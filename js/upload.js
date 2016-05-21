@@ -4,7 +4,7 @@ $().ready(function () {
 
     var formData = new FormData($('#upload-form')[0]);
     $.ajax({
-      url: 'submission.php',  //Server script to process data
+      url: 'service/submission.php',  //Server script to process data
       type: 'POST',
       xhr: function () {  // Custom XMLHttpRequest
         var myXhr = $.ajaxSettings.xhr();
@@ -55,7 +55,7 @@ $().ready(function () {
       var formData = {submission: document.getElementById('submission-text').innerHTML};
 
       $.ajax({
-        url: 'textsubmission.php',  //Server script to process data
+        url: 'service/textsubmission.php',  //Server script to process data
         type: 'POST',
         xhr: function () {  // Custom XMLHttpRequest
           var myXhr = $.ajaxSettings.xhr();
@@ -96,7 +96,7 @@ $().ready(function () {
       e.preventDefault();
       var formData = {submission: document.getElementById('comment-text').innerHTML, user: currentUserId};
       $.ajax({
-        url: 'comment.php',  //Server script to process data
+        url: 'service/comment.php',  //Server script to process data
         type: 'POST',
         xhr: function () {  // Custom XMLHttpRequest
           var myXhr = $.ajaxSettings.xhr();

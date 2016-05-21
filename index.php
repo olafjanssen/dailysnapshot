@@ -146,7 +146,7 @@ if (!State::refreshToken()) {
       }
     });
 
-    $.getJSON("students.php", function (resp) {
+    $.getJSON("service/students.php", function (resp) {
       var cached = localStorage.getItem(storeId + '/students');
       if (!cached) {
         cached = '';
@@ -201,7 +201,7 @@ if (!State::refreshToken()) {
   function loadSubmission(id) {
     showSubmissions();
 
-    $.get("singlesubmission.php", {user: id},
+    $.get("service/singlesubmission.php", {user: id},
       handleSubmission);
 
     function showSubmissions() {
