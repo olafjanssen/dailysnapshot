@@ -54,7 +54,7 @@ if (!State::refreshToken()) {
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
-  <script src="js/upload.js"></script>
+  <script src="js/upload.js?v1.2"></script>
 </head>
 <body>
 <header>

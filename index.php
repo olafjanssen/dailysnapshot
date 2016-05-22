@@ -56,7 +56,7 @@ if (!State::refreshToken()) {
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
-  <script src="js/upload.js"></script>
+  <script src="js/upload.js?v1.1"></script>
 </head>
 <body>
 <header>
@@ -113,6 +113,8 @@ if (!State::refreshToken()) {
 </section>
 
 <script>
+  console.log('clearing cache');
+  localStorage.clear();
   // write the upload link
   console.log('Your easy upload link: ', '<?echo State::createUploadLink();?>');
 
@@ -165,6 +167,11 @@ if (!State::refreshToken()) {
 
     function showStudents() {
       console.log('showing students', students);
+      // skip if students list is empty
+      if (students.length==0){
+        return;
+      }
+
       var selectElement = document.getElementById('student-filter'),
         commentElement = document.getElementById('comment-box'),
         uploadForm = document.getElementById('upload-form');
