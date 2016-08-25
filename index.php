@@ -52,7 +52,7 @@ if (!State::refreshToken()) {
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
@@ -169,6 +169,9 @@ if (!State::refreshToken()) {
       console.log('showing students', students);
       // skip if students list is empty
       if (students.length==0){
+        var section = document.getElementById('student-blog');
+        section.innerHTML = '<h2>No submissions yet...</h2>';
+
         return;
       }
 
