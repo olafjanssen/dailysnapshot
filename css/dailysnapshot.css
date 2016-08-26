@@ -118,6 +118,11 @@ h2 {
   width: auto;
 }
 
+#mobile-upload-link {
+  display: none;
+  font-size: 0.8em;
+}
+
 #select-wrapper[disabled]::after {
   content: '';
 }

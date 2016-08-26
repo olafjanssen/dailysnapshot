@@ -63,6 +63,8 @@ if (!State::refreshToken()) {
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
+  <a id="mobile-upload-link" target="blank" href="<?echo State::createUploadLink();?>">easy mobile version <i class="fa fa-mobile" aria-hidden="true"></i></a>
+
   <div id="select-wrapper" style="display:none;">
     <select id="student-filter" title="Student filter">
       <option>Show all</option>
@@ -538,6 +540,11 @@ if (!State::refreshToken()) {
         '|', 'btnGrp-lists']
     }
   );
+
+  // check in-frame for mobile upload link
+  if (window!=window.top) {
+    document.getElementById('mobile-upload-link').style.display = 'block';
+  }
 
 </script>
 
