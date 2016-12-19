@@ -22,7 +22,7 @@ if (!State::courseId() || !State::canvasDomain()) {
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
   <link rel="stylesheet" href="bower_components/css-modal/build/modal.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <link rel="stylesheet" href="bower_components/toastr/toastr.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
   <link rel="stylesheet" href="css/pong.css">
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">

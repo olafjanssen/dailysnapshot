@@ -46,13 +46,13 @@ if (!State::refreshToken()) {
   <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
   <link rel="stylesheet" href="bower_components/css-modal/build/modal.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+  <link rel="stylesheet" href="bower_components/toastr/toastr.min.css">
   <link rel="stylesheet" href="css/dailysnapshot.css">
   <link rel="stylesheet" href="css/pong.css">
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
+  <script src="bower_components/toastr/toastr.min.js"></script>
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
