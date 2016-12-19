@@ -12,7 +12,6 @@ require_once('../lib/canvasAPI.php');
 
 $fileIds = [];
 foreach ($_FILES as $key => $file) {
-
   $res = uploadSubmissionFile(State::courseId(), State::assignmentId(), $file['name'], $file['type'], $file['size']);
   $res = uploadSubmissionData($res['upload_url'], $res['upload_params'], $file['tmp_name']);
   $fileIds[] = $res['id'];
@@ -21,10 +20,3 @@ foreach ($_FILES as $key => $file) {
 $submitted =  submitAssignment(State::courseId(), State::assignmentId(), $fileIds);
 
 echo json_encode($submitted);
-
-// remove cache
-$files = glob('cache/'.md5(State::courseId() . State::assignmentId() . State::canvasDomain()).'-*'); // get all file names
-foreach($files as $file){ // iterate files
-  if(is_file($file))
-    unlink($file); // delete file
-}
