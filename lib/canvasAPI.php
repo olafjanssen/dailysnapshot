@@ -254,7 +254,7 @@ function uploadSubmissionData($url, $params, $fileData) {
 
   $headers = array("Content-Type:multipart/form-data"); // cURL headers for file uploading
   $postfields = $params;
-  $postfields['file'] = '@' . $fileData;
+  $postfields['file'] = new CURLFile($fileData);
   $ch = curl_init();
   $options = array(
     CURLOPT_URL => $url,
@@ -278,7 +278,6 @@ function uploadSubmissionData($url, $params, $fileData) {
   // Send to remote and return data to caller.
   $response = curl_exec($ch);
   curl_close($ch);
-
   return json_decode($response, true);
 }
 
