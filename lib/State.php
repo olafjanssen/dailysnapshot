@@ -50,6 +50,10 @@ class State {
     $_SESSION['access_token'] = $accessToken;
   }
 
+  public static function getKey() {
+    return sha1(self::courseId() . self::canvasDomain());
+  }
+
   public static function refreshToken() {
     return $_COOKIE[sha1(self::courseId() . self::canvasDomain())];
   }

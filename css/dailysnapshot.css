@@ -160,9 +160,13 @@ article {
   width: 100%;
 }
 
+article.blacklisted.textpost,
+article.blacklisted.comment {
+  padding: 0;
+}
+
 article.comment {
   box-sizing: border-box;
-  border-radius: 1em;
   padding: 0 2rem;
 }
 
@@ -215,6 +219,52 @@ h4 {
   top: 0.2em;
 }
 
+.blacklisted > :not(header){
+  display: none;
+}
+
+.blacklisted {
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid #ddd;
+}
+
+.row.blacklisted > header {
+  background: transparent;
+  position: static;
+  opacity: 1;
+}
+
+/*.isteacher .deleteButton,*/
+.comment:not(.byself) .deleteButton {
+  display: none;
+}
+
+.isteacher .blacklisted {
+  display: none;
+}
+
+.deleteButton {
+  margin-left: 0.5em;
+  color: #ff3333;
+  z-index: 1;
+}
+
+.deleteButton:hover {
+  color: #ff6666;
+}
+
+.undeleteButton {
+  transform: rotate(45deg);
+  color: darkseagreen;
+  margin-left: 0.5em;
+  z-index: 1;
+}
+
+.undeleteButton:hover {
+  color: lightseagreen;
+}
+
 .author,
 .avatar {
   display: none;
@@ -260,10 +310,11 @@ h4 {
 
 .row > header {
   transition: opacity 0.2s;
-  pointer-events: none;
+  /*pointer-events: none;*/
   position: absolute;
   text-align: right;
   background: black;
+  z-index: 1;
   color: #ddd;
   opacity: 0;
   right: 0;
@@ -321,7 +372,6 @@ h4 {
 #text-upload-form {
   text-align: right;
 }
-
 
 /* comment input box style overrides */
 #comment-upload-form {
