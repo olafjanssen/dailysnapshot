@@ -1,4 +1,5 @@
 <?php
+require_once('../../lib/logging.php');
 require_once('../../lib/config.php');
 require_once('../../lib/state.php');
 

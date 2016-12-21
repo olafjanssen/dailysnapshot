@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: olafjanssen
- * Date: 10/12/15
- * Time: 20:30
- */
-
+require_once('../lib/logging.php');
 require_once '../lib/state.php';
 require_once '../lib/canvasAPI.php';
 

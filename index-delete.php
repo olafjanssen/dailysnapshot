@@ -1,9 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set("log_errors", 1);
-ini_set("error_log", "/tmp/index-error.log");
-
+require_once('lib/logging.php');
 require_once('lib/config.php');
 require_once('lib/state.php');
 
