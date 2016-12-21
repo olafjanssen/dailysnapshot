@@ -118,6 +118,10 @@ h2 {
   width: auto;
 }
 
+#github-link {
+  font-size: 0.8em;
+}
+
 #mobile-upload-link {
   display: none;
   font-size: 0.8em;

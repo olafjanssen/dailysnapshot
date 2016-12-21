@@ -73,8 +73,9 @@ if (!State::refreshToken()) {
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
-  <a id="mobile-upload-link" target="blank" href="<? echo State::createUploadLink(); ?>">easy mobile version <i
-      class="fa fa-mobile" aria-hidden="true"></i></a>
+  <a id="mobile-upload-link" target="mobileupload" href="#">easy upload version <i
+      class="fa fa-mobile" aria-hidden="true"></i></a> <a id="github-link" target="gitrepo" href="#">follow the project
+    on Github <i class="fa fa-github" aria-hidden="true"></i></a>
 
   <div id="select-wrapper" style="display:none;">
     <select id="student-filter" title="Student filter">
@@ -351,7 +352,7 @@ if (!State::refreshToken()) {
                 }
                 var deleteButton = document.createElement('i');
                 deleteButton.setAttribute('class', 'fa fa-times');
-                deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+                deleteButton.classList.add((blacklist.indexOf(blacklistId) > -1) ? 'undeleteButton' : 'deleteButton');
                 deleteButton.setAttribute('title', 'Hide or unhide your post here for others.');
                 metaheader.appendChild(deleteButton);
                 article.appendChild(metaheader);
@@ -493,7 +494,7 @@ if (!State::refreshToken()) {
 
             var deleteButton = document.createElement('i');
             deleteButton.setAttribute('class', 'fa fa-times');
-            deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+            deleteButton.classList.add((blacklist.indexOf(blacklistId) > -1) ? 'undeleteButton' : 'deleteButton');
             deleteButton.setAttribute('title', 'Hide or unhide your comment here for others.');
             metaheader.appendChild(deleteButton);
             article.appendChild(metaheader);
@@ -552,7 +553,7 @@ if (!State::refreshToken()) {
 
             var deleteButton = document.createElement('i');
             deleteButton.setAttribute('class', 'fa fa-times');
-            deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+            deleteButton.classList.add((blacklist.indexOf(blacklistId) > -1) ? 'undeleteButton' : 'deleteButton');
             deleteButton.setAttribute('title', 'Hide or unhide your post here for others.');
             metaheader.appendChild(deleteButton);
             article.appendChild(metaheader);
@@ -645,8 +646,16 @@ if (!State::refreshToken()) {
 
   // check in-frame for mobile upload link
   if (window != window.top) {
-    document.getElementById('mobile-upload-link').style.display = 'block';
+    document.getElementById('mobile-upload-link').style.display = 'inline-block';
   }
+  document.getElementById('github-link').onclick = function (e) {
+    e.preventDefault();
+    window.open('https://github.com/olafjanssen/digitaldummy');
+  };
+  document.getElementById('mobile-upload-link').onclick = function (e) {
+    e.preventDefault();
+    window.open('<? echo State::createUploadLink(); ?>');
+  };
 
 </script>
 
