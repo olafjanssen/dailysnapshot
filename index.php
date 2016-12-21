@@ -1,4 +1,5 @@
 <?php
+require_once('lib/logging.php');
 require_once('lib/config.php');
 require_once('lib/state.php');
 
@@ -17,7 +18,7 @@ if (!State::refreshToken()) {
 } else {
   // refresh the access token
   $data = array('client_id' => Config::clientId(State::canvasDomain()),
-    'redirect_uri' => urlencode($uri),
+//    'redirect_uri' => urlencode($uri),
     'client_secret' => rawurlencode(Config::clientSecret(State::canvasDomain())),
     'refresh_token' => State::refreshToken(),
     'grant_type' => 'refresh_token');
@@ -57,13 +58,23 @@ if (!State::refreshToken()) {
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
   <script src="js/upload.js?v1.1"></script>
+  <script>
+    <?php
+    //ensure blacklist exists
+    file_put_contents('service/blacklists/' . State::getKey(), '', FILE_APPEND | LOCK_EX);
+    ?>
+    // include object blacklist
+    var blacklist = <?php echo json_encode(file('service/blacklists/' . State::getKey(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)); ?>;
+
+  </script>
 </head>
 <body>
 <header>
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
-  <a id="mobile-upload-link" target="blank" href="<?echo State::createUploadLink();?>">easy mobile version <i class="fa fa-mobile" aria-hidden="true"></i></a>
+  <a id="mobile-upload-link" target="blank" href="<? echo State::createUploadLink(); ?>">easy mobile version <i
+      class="fa fa-mobile" aria-hidden="true"></i></a>
 
   <div id="select-wrapper" style="display:none;">
     <select id="student-filter" title="Student filter">
@@ -170,7 +181,7 @@ if (!State::refreshToken()) {
     function showStudents() {
       console.log('showing students', students);
       // skip if students list is empty
-      if (students.length==0){
+      if (students.length == 0) {
         var section = document.getElementById('student-blog');
         section.innerHTML = '<h2>No submissions yet...</h2>';
       }
@@ -204,10 +215,14 @@ if (!State::refreshToken()) {
 
       // this is a not-so-nice test to see if the user is a student or a teacher
       if (students.length < 2) {
+        document.body.classList.add('isstudent');
+        document.body.classList.remove('isteacher');
         selectElement.setAttribute('disabled', 'true');
         selectElement.parentNode.setAttribute('disabled', 'true');
         uploadForm.style.display = 'block';
       } else {
+        document.body.classList.remove('isstudent');
+        document.body.classList.add('isteacher');
         // teachers cannot upload (sad if you're a teacher AND a student TODO)
         uploadForm.style.display = 'none';
       }
@@ -316,6 +331,13 @@ if (!State::refreshToken()) {
                 var article = document.createElement('article');
                 article.classList.add('row');
 
+                // tag blacklisted items
+                var blacklistId = 'aid/' + attachment.id;
+                console.log(blacklistId);
+                if (blacklist.indexOf(blacklistId) > -1) {
+                  article.classList.add('blacklisted');
+                }
+
                 // add metaheader
                 var metaheader = document.createElement('header');
                 var time = document.createElement('time');
@@ -327,7 +349,26 @@ if (!State::refreshToken()) {
                   author.innerHTML = getStudentNameForId(attempt.user_id);
                   metaheader.appendChild(author);
                 }
+                var deleteButton = document.createElement('i');
+                deleteButton.setAttribute('class', 'fa fa-times');
+                deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+                deleteButton.setAttribute('title', 'Hide or unhide your post here for others.');
+                metaheader.appendChild(deleteButton);
                 article.appendChild(metaheader);
+
+                deleteButton.addEventListener('click', function (e) {
+                  if (deleteButton.classList.contains('deleteButton')) {
+                    deleteButton.classList.remove('deleteButton');
+                    deleteButton.classList.add('undeleteButton');
+                    article.classList.add('blacklisted');
+                    $.post('service/blacklists/add.php', {id: blacklistId})
+                  } else {
+                    deleteButton.classList.add('deleteButton');
+                    deleteButton.classList.remove('undeleteButton');
+                    article.classList.remove('blacklisted');
+                    $.post('service/blacklists/remove.php', {id: blacklistId})
+                  }
+                });
 
                 var contentType = attachment['content-type'];
                 switch (contentType) {
@@ -427,6 +468,17 @@ if (!State::refreshToken()) {
             var article = document.createElement('article');
             article.classList.add('row');
 
+            // tag blacklisted items
+            var blacklistId = 'cid/' + attempt.id;
+            console.log(blacklistId);
+            if (blacklist.indexOf(blacklistId) > -1) {
+              article.classList.add('blacklisted');
+            }
+
+            if (attempt.author_id === currentUserId) {
+              article.classList.add('byself');
+            }
+
             // add metaheader TODO REMOVE CODE DUPLICATE except for author id
             var metaheader = document.createElement('header');
             var time = document.createElement('time');
@@ -438,8 +490,30 @@ if (!State::refreshToken()) {
               author.innerHTML = getStudentNameForId(attempt.author_id);
               metaheader.appendChild(author);
             }
+
+            var deleteButton = document.createElement('i');
+            deleteButton.setAttribute('class', 'fa fa-times');
+            deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+            deleteButton.setAttribute('title', 'Hide or unhide your comment here for others.');
+            metaheader.appendChild(deleteButton);
             article.appendChild(metaheader);
 
+            deleteButton.addEventListener('click', function (e) {
+              console.log('clicked');
+              if (deleteButton.classList.contains('deleteButton')) {
+                deleteButton.classList.remove('deleteButton');
+                deleteButton.classList.add('undeleteButton');
+                article.classList.add('blacklisted');
+                $.post('service/blacklists/add.php', {id: blacklistId})
+              } else {
+                deleteButton.classList.add('deleteButton');
+                deleteButton.classList.remove('undeleteButton');
+                article.classList.remove('blacklisted');
+                $.post('service/blacklists/remove.php', {id: blacklistId})
+              }
+            });
+
+            article.appendChild(metaheader);
             // add author to comment
             var authorHeader = document.createElement('div');
             authorHeader.classList.add('commentauthor');
@@ -457,6 +531,13 @@ if (!State::refreshToken()) {
             var article = document.createElement('article');
             article.classList.add('row');
 
+            // tag blacklisted items
+            var blacklistId = 'bid/' + attempt.id + '/' + attempt.attempt;
+            console.log(blacklistId);
+            if (blacklist.indexOf(blacklistId) > -1) {
+              article.classList.add('blacklisted');
+            }
+
             // add metaheader TODO REMOVE CODE DUPLICATE except for author id
             var metaheader = document.createElement('header');
             var time = document.createElement('time');
@@ -468,6 +549,29 @@ if (!State::refreshToken()) {
               author.innerHTML = getStudentNameForId(attempt.user_id);
               metaheader.appendChild(author);
             }
+
+            var deleteButton = document.createElement('i');
+            deleteButton.setAttribute('class', 'fa fa-times');
+            deleteButton.classList.add( (blacklist.indexOf(blacklistId) > -1)? 'undeleteButton' : 'deleteButton' );
+            deleteButton.setAttribute('title', 'Hide or unhide your post here for others.');
+            metaheader.appendChild(deleteButton);
+            article.appendChild(metaheader);
+
+            deleteButton.addEventListener('click', function (e) {
+              console.log('clicked');
+              if (deleteButton.classList.contains('deleteButton')) {
+                deleteButton.classList.remove('deleteButton');
+                deleteButton.classList.add('undeleteButton');
+                article.classList.add('blacklisted');
+                $.post('service/blacklists/add.php', {id: blacklistId})
+              } else {
+                deleteButton.classList.add('deleteButton');
+                deleteButton.classList.remove('undeleteButton');
+                article.classList.remove('blacklisted');
+                $.post('service/blacklists/remove.php', {id: blacklistId})
+              }
+            });
+
             article.appendChild(metaheader);
 
             var paragraph = document.createElement('p');
@@ -540,7 +644,7 @@ if (!State::refreshToken()) {
   );
 
   // check in-frame for mobile upload link
-  if (window!=window.top) {
+  if (window != window.top) {
     document.getElementById('mobile-upload-link').style.display = 'block';
   }
 
