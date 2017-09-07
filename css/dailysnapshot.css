@@ -188,6 +188,10 @@ article.textpost {
   padding: 0 2rem;
 }
 
+article.textpost div {
+  margin: 20px 0;
+}
+
 article.file {
   padding: 1em 0 1.5em;
   text-align: center;
