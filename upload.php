@@ -51,7 +51,7 @@ if (!State::refreshToken()) {
   <link rel="stylesheet" href="css/pong.css">
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/jquery-2.1.4.min.js"></script>
   <script src="bower_components/toastr/toastr.min.js"></script>
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/upload.js?v1.2"></script>

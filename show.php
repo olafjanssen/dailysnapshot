@@ -27,7 +27,7 @@ if (!State::courseId() || !State::canvasDomain()) {
   <link rel="stylesheet" href="css/pong.css">
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/jquery-2.1.4.min.js"></script>
   <script src="js/anchorme.js"></script>
   <script src="js/moment.min.js"></script>
 

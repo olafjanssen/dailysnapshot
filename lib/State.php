@@ -55,7 +55,7 @@ class State {
   }
 
   public static function refreshToken() {
-    return $_COOKIE[sha1(self::courseId() . self::canvasDomain())];
+    return array_key_exists(sha1(self::courseId() . self::canvasDomain()), $_COOKIE) ? $_COOKIE[sha1(self::courseId() . self::canvasDomain())] : null;
   }
 
   public static function setRefreshToken($refreshToken) {

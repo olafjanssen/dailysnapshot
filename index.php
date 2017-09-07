@@ -52,7 +52,7 @@ if (!State::refreshToken()) {
   <link rel="stylesheet" href="css/pong.css">
   <link rel="stylesheet" href="bower_components/trumbowyg/dist/ui/trumbowyg.min.css">
 
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="js/jquery-2.1.4.min.js"></script>
   <script src="bower_components/toastr/toastr.min.js"></script>
   <script src='bower_components/fastclick/lib/fastclick.js'></script>
   <script src="js/anchorme.js"></script>
@@ -73,7 +73,7 @@ if (!State::refreshToken()) {
   <h1>Digital Dummy</h1>
   <h2>You've moved mountains today!</h2>
 
-  <a id="mobile-upload-link" target="mobileupload" href="#">easy upload version <i
+  <a id="mobile-upload-link" target="mobileupload" href="<? echo State::createUploadLink(); ?>">easy upload version <i
       class="fa fa-mobile" aria-hidden="true"></i></a> <a id="github-link" target="gitrepo" href="#">follow the project
     on Github <i class="fa fa-github" aria-hidden="true"></i></a>
 
@@ -327,7 +327,7 @@ if (!State::refreshToken()) {
           }
 
           if (attempt.attachments) {
-            var img, audio, video, mediaSource, iframe;
+            var img, audio, video, mediaSource, iframe, item_blacklisted = false;
             attempt.attachments.forEach(function (attachment) {
                 var article = document.createElement('article');
                 article.classList.add('row');
@@ -336,6 +336,7 @@ if (!State::refreshToken()) {
                 var blacklistId = 'aid/' + attachment.id;
                 console.log(blacklistId);
                 if (blacklist.indexOf(blacklistId) > -1) {
+                  item_blacklisted = true;
                   article.classList.add('blacklisted');
                 }
 
@@ -434,7 +435,7 @@ if (!State::refreshToken()) {
                   case 'application/json':
                     if (window.self !== window.top) {
                       iframe = document.createElement('iframe');
-                      iframe.setAttribute('src', canvasDomain + attachment.preview_url);
+                      iframe.setAttribute(item_blacklisted ? 'data-src' : 'src', canvasDomain + attachment.preview_url);
                       iframe.classList.add('blog-embed');
                       article.appendChild(iframe);
                       break;
@@ -645,9 +646,9 @@ if (!State::refreshToken()) {
   );
 
   // check in-frame for mobile upload link
-  if (window != window.top) {
-    document.getElementById('mobile-upload-link').style.display = 'inline-block';
-  }
+  //  if (window != window.top) {
+  document.getElementById('mobile-upload-link').style.display = 'inline-block';
+  //  }
   document.getElementById('github-link').onclick = function (e) {
     e.preventDefault();
     window.open('https://github.com/olafjanssen/digitaldummy');

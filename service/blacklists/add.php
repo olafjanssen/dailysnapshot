@@ -5,6 +5,4 @@ require_once('../../lib/state.php');
 
 $text = $_POST['id'] . "\n";
 
-$aap = 10 / 0;
-
 file_put_contents(State::getKey(), $text, FILE_APPEND | LOCK_EX);

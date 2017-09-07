@@ -1,5 +1,5 @@
 {
-  "name": "Daily Snapshot LTI",
+  "name": "daily-snapshot-lti",
   "homepage": "https://github.com/olafjanssen/dailysnapshot",
   "authors": [
     "Olaf Janssen <o.t.a.janssen@gmail.com>"
@@ -21,7 +21,8 @@
     "css-modal": "v1.4.1",
     "fastclick": "v1.0.6",
     "trumbowyg": "1.1.7",
-    "swfobject": "2.3-beta+rc1"
+    "swfobject": "2.3-beta+rc1",
+    "jquery": "2.2.4"
   },
   "devDependencies": {}
 }
